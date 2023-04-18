@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-100
+}
+
+:root {
+  --main-color: #C2E9E9;
+  --light-gray: #F0EEED;
+}
+
+.active-page:hover {
+  color: var(--main-color);
+}
+
+.nonactive-page:hover {
+  color: var(--light-gray);
+  background-color: var(--main-color);
+}
