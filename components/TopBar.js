@@ -3,8 +3,8 @@ import {
   Bars3CenterLeftIcon,
   PencilIcon,
   ChevronDownIcon,
-  CreditCardIcon,
-  Cog8ToothIcon,
+  CogIcon,
+  Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import { BellIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { Menu, Transition, Popover } from "@headlessui/react";
@@ -132,7 +132,7 @@ const TopBar = ({ showNav, setShowNav }) => {
                     href="#"
                     className="flex hover:bg-cyan-500 hover:text-white text-gray-700 rounded p-2 text-sm group transition-colors items-center"
                   >
-                    <CreditCardIcon className="h-4 w-4 mr-2" />
+                    <CogIcon className="h-4 w-4 mr-2" />
                     Configuración
                   </Link>
                 </Menu.Item>
@@ -141,7 +141,7 @@ const TopBar = ({ showNav, setShowNav }) => {
                     href="#"
                     className="flex hover:bg-cyan-500 hover:text-white text-gray-700 rounded p-2 text-sm group transition-colors items-center"
                   >
-                    <Cog8ToothIcon className="h-4 w-4 mr-2" />
+                    <Cog6ToothIcon className="h-4 w-4 mr-2" />
                     Sign out
                   </Link>
                 </Menu.Item>

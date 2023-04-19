@@ -1,10 +1,9 @@
 import { forwardRef } from "react";
 import Link from "next/link";
-import { HomeIcon, QueueListIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
 import links from "@/data/links";
 
-const SideBar = forwardRef(({ showNav, currentPage }, ref) => {
+const SideBar = forwardRef(({ showNav }, ref) => {
   const router = useRouter();
 
   return (
@@ -20,18 +19,18 @@ const SideBar = forwardRef(({ showNav, currentPage }, ref) => {
       </div>
 
       {links.map( links =>  (
-        <div className="flex flex-col" key={links.id}>
+        <div className="flex flex-col" key={links.href}>
           <Link href={links.href}>
             <div
-              className={`pl-6 py-3 mx-5 rounded text-center cursor-pointer mb-3 flex items-center transition-colors ${
-                router.pathname === links.text
-                ? "bg-cyan-100 text-cyan-900"
-                : "text-gray-400 hover:bg-cyan-100 hover:text-cyan-700"
+              className={`pl-6 py-3 mx-4 rounded text-center cursor-pointer mb-3 flex items-center transition-colors ${
+                router.pathname === links.href
+                ? "bg-gray-200 text-gray-700 font-bold"
+                : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
               }`} 
             > 
 
               <div className="mr-2">
-                <QueueListIcon className="h-5 w-5" /> 
+                {links.icon}
               </div>
 
               <div>

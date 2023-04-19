@@ -7,15 +7,7 @@ body {
 }
 
 :root {
-  --main-color: #C2E9E9;
+  --light-cyan: #CCFFFF;
+  --bold-cyan: #006699;
   --light-gray: #F0EEED;
-}
-
-.active-page:hover {
-  color: var(--main-color);
-}
-
-.nonactive-page:hover {
-  color: var(--light-gray);
-  background-color: var(--main-color);
 }
