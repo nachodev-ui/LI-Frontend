@@ -1,10 +1,10 @@
-import Head from "next/head"
+
 import TopBar from "./TopBar"
 import SideBar from "./SideBar"
 import { useState, useEffect, Fragment } from "react";
 import { Transition } from "@headlessui/react";
 
-const Layout = ({children, page}) => {
+const Layout = ({children}) => {
 
   const [showNav, setShowNav] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
@@ -31,11 +31,6 @@ const Layout = ({children, page}) => {
 
   return (
     <>
-      <Head>
-        <title>Librería Imagina - {page}</title>
-        <meta name="description" content="Integración Librería Imagina por TESS" />
-      </Head>
-
       <TopBar showNav={showNav} setShowNav={setShowNav} />
 
       <Transition
@@ -52,7 +47,7 @@ const Layout = ({children, page}) => {
 
       <main className={`pt-16 transition-all duration-[400ms] ${showNav && !isMobile ? "pl-56" : ""}`}>
         <div className="px-4 md:px-16">
-          { children }
+          {children}
         </div>
       </main>
 
