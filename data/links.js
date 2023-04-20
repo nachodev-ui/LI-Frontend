@@ -1,9 +1,8 @@
-import { HomeIcon, BookOpenIcon, PhoneIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import { HomeIcon, UserIcon } from "@heroicons/react/24/solid";
 
 const links = [
-    { href: '/', text: 'Inicio', icon: <HomeIcon className="w-5 h-5" /> },
-    { href: '/libros', text: 'Libros', icon: <BookOpenIcon className="w-5 h-5" /> },
-    { href: '/contacto', text: 'Contacto', icon: <PhoneIcon className="w-5 h-5" />},
+    { href: '/', text: 'Inicio', icon: <HomeIcon className="w-4 h-4" /> },
+    { href: '/perfil', text: 'Perfil', icon: <UserIcon className="w-4 h-4" />},
 ];
 
 export default links;
