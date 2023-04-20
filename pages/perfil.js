@@ -1,11 +1,15 @@
-
+import ceo from "@/data/ceo"
+import ProfileLayout from "@/components/ProfileLayout"
 
 const perfil = () => {
   return (
-    <div className="font-extralight">
-        <p>Bienvenid@ usuario</p>
+    <ProfileLayout>
+        {ceo("Perfil")}
 
-    </div>
+        <p className="text-gray-800 text-3xl mb-16 font-bold">Mi perfil</p>
+        
+                
+    </ProfileLayout>
   )
 }
 
