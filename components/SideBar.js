@@ -29,11 +29,9 @@ const SideBar = forwardRef(({ showNav }, ref) => {
               }`} 
             > 
 
-              <div className="mr-2">
-                {links.icon}
-              </div>
-
-              <div>
+             {links.icon}
+              
+              <div className="ml-2">
                 <p>{links.text}</p>
               </div>
 
