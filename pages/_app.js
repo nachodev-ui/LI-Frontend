@@ -1,10 +1,11 @@
 import '@/styles/globals.css'
-import Layout from '@/components/Layout'
+
+import { ThemeProvider } from '@material-tailwind/react';
 
 export default function App({ Component, pageProps }) {
   return (
-    <Layout>
+    <ThemeProvider>
       <Component {...pageProps} />
-    </Layout>
+    </ThemeProvider>
   );
 }
