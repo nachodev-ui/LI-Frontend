@@ -5,9 +5,3 @@
 body {
   @apply bg-gray-100
 }
-
-:root {
-  --light-cyan: #CCFFFF;
-  --bold-cyan: #006699;
-  --light-gray: #F0EEED;
-}
