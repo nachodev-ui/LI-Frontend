@@ -102,7 +102,7 @@ const TopBar = ({ showNav, setShowNav }) => {
                 />
               </picture>
               <span className="hidden md:block font-medium text-gray-700">
-                Técnico
+                Usuario
               </span>
               <ChevronDownIcon className="ml-2 h-4 w-4 text-gray-700" />
             </Menu.Button>
