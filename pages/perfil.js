@@ -1,14 +1,11 @@
 import ceo from "@/data/ceo"
 import ProfileLayout from "@/components/ProfileLayout"
+import UserProfile from "@/components/UserProfile"
 
 const perfil = () => {
   return (
     <ProfileLayout>
-        {ceo("Perfil")}
-
-        <p className="text-gray-800 text-3xl mb-16 font-bold">Mi perfil</p>
-        
-                
+      
     </ProfileLayout>
   )
 }

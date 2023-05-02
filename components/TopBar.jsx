@@ -6,9 +6,10 @@ import {
   CogIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
-import { BellIcon, CheckIcon } from "@heroicons/react/24/outline";
-import { Menu, Transition, Popover } from "@headlessui/react";
+import { Menu, Transition } from "@headlessui/react";
 import Link from "next/link";
+import { BellIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { Popover } from "@headlessui/react";
 
 const TopBar = ({ showNav, setShowNav }) => {
   return (

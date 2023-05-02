@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Navbar,
   MobileNav,
@@ -11,6 +11,7 @@ import {
   Avatar,
   Card,
   IconButton,
+  Tooltip,
 } from "@material-tailwind/react";
 import {
   UserCircleIcon,
@@ -23,32 +24,46 @@ import {
   EnvelopeIcon,
   ChatBubbleLeftRightIcon,
   ShoppingBagIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
-import Link from "next/link"; 
+import Link from "next/link";
 
-// Componentes del perfil
+// profile menu component
 const profileMenuItems = [
   {
     label: "Mi perfil",
     icon: UserCircleIcon,
-    href: "/perfil",
   },
   {
     label: "Mis compras",
     icon: ShoppingBagIcon,
-    href: "/compras",
   },
   {
     label: "Cerrar sesión",
     icon: PowerIcon,
-    href: "/", // Cambiar a /login
   },
 ];
- 
-function ProfileMenu() {
+
+export function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isLogged, setIsLogged] = useState(false);
   const closeMenu = () => setIsMenuOpen(false);
- 
+
+  if (!isLogged) {
+    return (
+      <Link
+        href="/login"
+        variant="text"
+        color="blue-gray"
+        className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
+      >
+        <Tooltip content="Presiona para iniciar sesión" placement="bottom">
+          <UserIcon className="h-6 w-6" />
+        </Tooltip>
+      </Link>
+    );
+  }
+
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
       <MenuHandler>
@@ -57,23 +72,25 @@ function ProfileMenu() {
           color="blue-gray"
           className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
         >
-          <Avatar
-            variant="circular"
-            size="sm"
-            alt="candice wu"
-            className="border border-blue-500 p-0.5"
-            src="https://i.pravatar.cc/840"
-          />
-          <ChevronDownIcon
-            strokeWidth={2.5}
-            className={`h-3 w-3 transition-transform ${
-              isMenuOpen ? "rotate-180" : ""
-            }`}
-          />
+          <>
+            <Avatar
+              variant="circular"
+              size="sm"
+              alt="candice wu"
+              className="border border-blue-500 p-0.5"
+              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+            />
+            <ChevronDownIcon
+              strokeWidth={2}
+              className={`h-3 w-3 transition-transform ${
+                isMenuOpen ? "rotate-180" : ""
+              }`}
+            />
+          </>
         </Button>
       </MenuHandler>
       <MenuList className="p-1">
-        {profileMenuItems.map(({ label, icon, href }, key) => {
+        {profileMenuItems.map(({ label, icon }, key) => {
           const isLastItem = key === profileMenuItems.length - 1;
           return (
             <MenuItem
@@ -95,9 +112,7 @@ function ProfileMenu() {
                 className="font-normal"
                 color={isLastItem ? "red" : "inherit"}
               >
-                <Link href={href}>
-                  {label}
-                </Link>
+                {label}
               </Typography>
             </MenuItem>
           );
@@ -106,11 +121,11 @@ function ProfileMenu() {
     </Menu>
   );
 }
- 
+
 // Lista navbar (servicios)
 const navListMenuItems = [
   {
-    href: '/libros',
+    href: "/libros",
     title: "Librería",
     description:
       "Encuentra los mejores libros para tu negocio, escuela o hogar.",
@@ -122,15 +137,15 @@ const navListMenuItems = [
       "Realizamos mantenimiento a tus libros para que estén en perfectas condiciones.",
   },
 ];
- 
+
 function NavListMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
- 
+
   const triggers = {
     onMouseEnter: () => setIsMenuOpen(true),
     onMouseLeave: () => setIsMenuOpen(false),
   };
- 
+
   const renderItems = navListMenuItems.map(({ title, description, href }) => (
     <Link href={href} key={title}>
       <MenuItem>
@@ -143,7 +158,7 @@ function NavListMenu() {
       </MenuItem>
     </Link>
   ));
- 
+
   return (
     <React.Fragment>
       <Menu open={isMenuOpen} handler={setIsMenuOpen}>
@@ -192,15 +207,15 @@ function NavListMenu() {
 
 // Categorias navbar
 const navListCategories = [
-    {
-        category: "Aventura",
-    },
-    {
-        category: "Terror",
-        href: "/terror",
-    },
+  {
+    category: "Aventura",
+  },
+  {
+    category: "Terror",
+    href: "/terror",
+  },
 ];
- 
+
 // Lista del navbar
 const navListItems = [
   {
@@ -216,7 +231,7 @@ const navListItems = [
     icon: ChatBubbleLeftRightIcon,
   },
 ];
- 
+
 function NavList() {
   return (
     <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
@@ -239,18 +254,18 @@ function NavList() {
     </ul>
   );
 }
- 
+
 export default function ComplexNavbar() {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
- 
+
   React.useEffect(() => {
     window.addEventListener(
       "resize",
       () => window.innerWidth >= 960 && setIsNavOpen(false)
     );
   }, []);
- 
+
   return (
     <Navbar className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6">
       <div className="relative mx-auto flex items-center text-blue-gray-900">
@@ -281,4 +296,3 @@ export default function ComplexNavbar() {
     </Navbar>
   );
 }
-

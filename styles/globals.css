@@ -7,3 +7,8 @@
 body {
   @apply bg-gray-100
 }
+
+.activo {
+  color: white;
+  background-color: black;
+}
