@@ -12,3 +12,43 @@ body {
   color: white;
   background-color: black;
 }
+
+.error {
+  color: #fc8181;
+  font-size: 0.75rem;
+  text-align: left;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 0.5rem 0.5rem;
+  font-size: 1rem;
+  color: #212121;
+  border: 2px solid #4a5568;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  outline: none;
+}
+
+input.input-error,
+select.input-error {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border-radius: 0.75rem;
+  border-width: 1px;
+  border-color: #fc8181;
+}
+
+button:disabled {
+  opacity: 0.35;
+}
+
+form p {
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #fc8181;
+  margin: 0 auto;
+}
+

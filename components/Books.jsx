@@ -4,114 +4,153 @@ import {
   CardBody,
   CardFooter,
   Typography,
-  Button
+  Button,
 } from "@material-tailwind/react";
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const Books = (props) => {
-  const [books, setBooks] = useState([
-    {
-      id: 1,
-      title: "El Resplandor",
-      price: 9.99,
-      image:
-        "https://images.cdn2.buscalibre.com/fit-in/360x360/06/62/066251a8cf73e93a1f437d66e6f50341.jpg",
-      categoria: "Terror",
-      autor: "Stephen King",
-    },
-    {
-      id: 2,
-      title: "Doctor Sleep",
-      price: 9.99,
-      image:
-        "https://images.cdn2.buscalibre.com/fit-in/360x360/5e/97/5e97b68ae5d27697017d1873ca2d3182.jpg",
-      categoria: "Terror",
-      autor: "Stephen King",
-    },
-    {
-      id: 3,
-      title: "Después",
-      price: 9.99,
-      image:
-        "https://images.cdn1.buscalibre.com/fit-in/360x360/30/fe/30fe1f93a6df3e12d2a6d897088e1d98.jpg",
-      categoria: "Ficción literaria",
-      autor: "Stephen King",
-    },
-    {
-      id: 4,
-      title: "La sangre manda",
-      price: 9.99,
-      image:
-        "https://images.cdn2.buscalibre.com/fit-in/360x360/13/54/1354f3615bc60ef2ac64f033d97fac36.jpg",
-      categoria: "Ficción mordenista",
-      autor: "Stephen King",
-    },
-    {
-      id: 5,
-      title: "El cuervo",
-      price: 9.99,
-      image:
-        "https://images.cdn2.buscalibre.com/fit-in/360x360/31/78/317835028b8ffb763d9358bf4d766627.jpg",
-      categoria: "Terror",
-      autor: "Edgar Allan Poe",
-    },
-  ]);
+const Books = ({ loggedIn }) => {
+  const [books, setBooks] = useState([]);
+  const [filters, setFilters] = useState({
+    genre: "all",
+    minPrice: 0,
+  });
+  const [minPrice, setMinPrice] = useState(0);
 
-  const handleBuy = (book) => {
-    console.log(`You bought ${book.title} for ${book.price}`);
-  }
+  useEffect(() => {
+    fetchBooks();
+  }, []);
 
-  const item = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-    },
+  const fetchBooks = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/books");
+      console.log("API response:", response);
+      console.log("API data:", response.data);
+
+      if (Array.isArray(response.data.data)) {
+        const booksData = response.data.data.map((book) => {
+          const precio = parseFloat(book.precio);
+          return {
+            ...book,
+            precio: Number.isFinite(precio) ? precio : 0, // Asignar un valor predeterminado en caso de precio inválido
+          };
+        });
+        setBooks(booksData);
+      } else {
+        console.log(
+          "La respuesta de la API no es un array válido:",
+          response.data
+        );
+        // Puedes mostrar un mensaje de error o tomar otra acción apropiada aquí
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const filterBooks = (books) => {
+    return books.filter((book) => {
+      return (
+        book.precio >= filters.minPrice &&
+        (filters.genre === "all" ||
+          book.genero.toLowerCase() === filters.genre.toLowerCase())
+      );
+    });
+  };
+
+  const filteredBooks = filterBooks(books);
+
+  const handleGenreChange = (event) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      genre: event.target.value,
+    }));
+  };
+
+  const handlePriceChange = (event) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      minPrice: parseFloat(event.target.value),
+    }));
   };
 
   return (
-    <div className="flex flex-wrap mr-16 md:mx-auto xl:mx-auto justify-center md:justify-start xl:justify-start container">
-      {books.map((book, index) => (
-        <motion.div className="item" variants={item} key={index}>
-          <Card className="w-60 mx-8 mt-20">
-            <CardHeader className="relative h-60">
-              <img
-                src={book.image}
-                alt="imagen libro"
-                className="h-full w-full"
-              />
-            </CardHeader>
-            <CardBody className="text-center">
-              <Typography variant="h5" className="mb-2">
-                {book.title}
-              </Typography>
-              <Typography>
-                <span className="text-gray-500">Autor:</span> {book.autor}
-              </Typography>
-            </CardBody>
-            <CardFooter
-              divider
-              className="flex items-center justify-between py-3"
+    <>
+      <section className="flex items-center justify-between">
+        <div className="flex gap-4">
+          <div className="mr-4">
+            <label htmlFor="genre">Genre:</label>
+            <select
+              id="genre"
+              name="genre"
+              value={filters.genre}
+              onChange={handleGenreChange}
             >
-              <Typography variant="small">{book.categoria}</Typography>
-              <Typography variant="small" color="gray" className="flex gap-1">
-                ${book.price}
-              </Typography>
-            </CardFooter>
+              <option value="all">All</option>
+              <option value="fantasía">Fantasía</option>
+              <option value="romance">Romance</option>
+              <option value="terror">Terror</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="minPrice">Min Price:</label>
+            <input
+              type="number"
+              id="minPrice"
+              name="minPrice"
+              value={filters.minPrice}
+              onChange={handlePriceChange}
+            />
+            <span>${minPrice}</span>
+          </div>
+        </div>
+      </section>
 
-            {props.loggedIn && (
-              <Button
-                className="mx-4 my-3 flex flex-row bg-[#f47856] hover:bg-[#ea6f4d]"
-                size="md"
-              >
-                <span className="flex flex-row mx-auto">Añadir al carro</span>
-              </Button>
-            )}
-          </Card>
-        </motion.div>
-      ))}
-    </div>
+      <div className="flex justify-center mx-auto mt-12">
+        <div className="flex w-full">
+          {filteredBooks.map((book) => (
+            <Card className="w-60" key={book.id}>
+              <CardHeader shadow={false} floated={false} className="h-86">
+                <img src={book.imagen} className="w-full h-80" />
+              </CardHeader>
+              <CardBody>
+                <div className="flex items-center justify-between mb-2">
+                  <Typography color="blue-gray" className="font-medium">
+                    {book.titulo}
+                  </Typography>
+                  <Typography color="blue-gray" className="font-medium">
+                    ${book.precio}
+                  </Typography>
+                </div>
+                <Typography
+                  variant="small"
+                  color="gray"
+                  className="font-normal opacity-75"
+                >
+                  {book.descripcion}
+                </Typography>
+                <Typography
+                  variant="small"
+                  color="gray"
+                  className="font-normal opacity-75"
+                >
+                  Stock: {book.stock}
+                </Typography>
+              </CardBody>
+              <CardFooter className="pt-0">
+                <Button
+                  ripple={false}
+                  fullWidth={true}
+                  className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:shadow-none hover:scale-105 focus:shadow-none focus:scale-105 active:scale-100"
+                >
+                  Comprar
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 

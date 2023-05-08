@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Navbar,
-  MobileNav,
   Typography,
   Button,
   Menu,
@@ -12,6 +11,7 @@ import {
   Card,
   IconButton,
   Tooltip,
+  Collapse
 } from "@material-tailwind/react";
 import {
   UserCircleIcon,
@@ -290,9 +290,9 @@ export default function ComplexNavbar() {
         </IconButton>
         <ProfileMenu />
       </div>
-      <MobileNav open={isNavOpen} className="overflow-scroll">
+      <Collapse open={isNavOpen}>
         <NavList />
-      </MobileNav>
+      </Collapse>
     </Navbar>
   );
 }

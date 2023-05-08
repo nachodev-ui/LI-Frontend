@@ -1,48 +1,153 @@
 import { useState } from "react";
 import Link from "next/link";
+import axios from "axios";
+import { basicSchema } from "@/schemas";
+import { useFormik } from "formik";
+
+// Validate username if is 'admin', etc
+export const validate = (values) => {
+  const errors = {};
+
+  if (
+    [
+      "admin",
+      "superadmin",
+      "root",
+      "administrator",
+      "administrador",
+      "null",
+    ].includes(values.username)
+  ) {
+    errors.username = "No puedes usar ese nombre de usuario";
+  }
+
+  if (values.password !== values.confirmPassword) {
+    errors.confirmPassword = "Las contraseñas no coinciden";
+  }
+
+  return errors;
+};
 
 const Register = () => {
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+  } = useFormik({
+    initialValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema: basicSchema,
+    onSubmit: async (values, actions) => {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      try {
+        const user = {
+          username: values.username,
+          correo: values.email,
+          password: values.username,
+          confirmPassword: values.confirmPassword,
+        };
+
+        const response = await axios.post(
+          "http://localhost:5000/auth/signup",
+          user
+        );
+
+        console.log(response.data);
+        actions.resetForm();
+      } catch (e) {
+        if (e.response.data && Object.keys(e.response.data).length > 0) {
+          setErrorMessage(e.response.data);
+          setShowModal(true);
+        } else {
+          console.log("Error desconocido");
+        }
+      }
+    },
+    validate,
+  });
 
   return (
     <section className="bg-gray-50 min-h-screen flex items-center justify-center">
       <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center">
         <div className="md:w-1/2 px-12 md:px-12">
           <h2 className="font-bold text-2xl text-[#978284]">Registro</h2>
-          <p className="text-xs mt-2 text-[#9f888b]">
+          <p className="text-xs mt-2 mb-8 text-[#9f888b]">
             ¡Crea tu cuenta fácilmente y empieza a disfrutar de todos nuestros
             productos y servicios!
           </p>
 
-          <form className="flex flex-col gap-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4"
+            autoComplete="off"
+          >
             <input
-              className="text-sm p-2 mt-8 rounded-xl border"
+              className={
+                errors.username && touched.username
+                  ? "input-error"
+                  : "text-sm p-2 rounded-xl border"
+              }
+              value={values.username}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              type="text"
+              name="username"
+              id="username"
+              placeholder="Ingresa un nombre de usuario"
+            />
+            {errors.username && touched.username && <p>{errors.username}</p>}
+            <input
+              className={
+                errors.email && touched.email
+                  ? "input-error"
+                  : "text-sm p-2 rounded-xl border"
+              }
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
               type="email"
               name="email"
-              placeholder="Email"
+              id="email"
+              placeholder="Ingresa tu correo"
             />
+            {errors.email && touched.email && <p>{errors.email}</p>}
             <div className="relative">
               <input
-                className="text-sm p-2 rounded-xl border w-full"
+                className={
+                  errors.password && touched.password
+                    ? "input-error"
+                    : "text-sm rounded-xl border w-full"
+                }
                 type={showPassword ? "text" : "password"}
                 name="password"
-                placeholder="Password"
-                onChange={handlePasswordChange}
-                value={password}
+                placeholder="Mínimo 5 caracteres"
+                onChange={handleChange}
+                value={values.password}
+                onBlur={handleBlur}
               />
               <svg
-                className={`bi bi-eye absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer ${
-                  showPassword ? "text-blue-500" : "text-gray-500"
-                }`}
+                className={
+                  errors.password && touched.password
+                    ? "bi bi-eye absolute top-1/3 right-3 -translate-y-1/2  cursor-pointer"
+                    : "bi bi-eye absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
+                }
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
@@ -53,14 +158,27 @@ const Register = () => {
                 <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
                 <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
               </svg>
+              {errors.password && touched.password && <p className="mt-3">{errors.password}</p>}
             </div>
             <input
-              className="text-sm p-2 rounded-xl border w-full"
+              className={
+                errors.password && touched.password
+                  ? "input-error"
+                  : "text-sm rounded-xl border w-full"
+              }
               type={showPassword ? "text" : "password"}
               name="confirmPassword"
               placeholder="Confirmar contraseña"
+              onChange={handleChange}
+              value={values.confirmPassword}
+              onBlur={handleBlur}
             />
-            <button className="bg-[#CBB8BA] rounded-xl text-white py-2 hover:scale-105 duration-300">
+            {errors.confirmPassword && touched.confirmPassword && <p>{errors.confirmPassword}</p>}
+            <button 
+              className="bg-[#CBB8BA] rounded-xl text-white py-2 hover:scale-105 duration-300"
+              type="submit"
+              disabled={isSubmitting}  
+            >
               Crear cuenta
             </button>
           </form>

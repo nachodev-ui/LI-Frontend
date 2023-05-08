@@ -1,5 +1,5 @@
-import '@/styles/globals.css'
-import { ThemeProvider } from '@material-tailwind/react';
+import "@/styles/globals.css";
+import { ThemeProvider } from "@material-tailwind/react";
 
 export default function App({ Component, pageProps }) {
   return (

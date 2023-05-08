@@ -3,7 +3,6 @@ import Link from "next/link";
 import LoginForm from "./forms/LoginForm";
 
 const Login = (props) => {
-
   return (
     <section className="bg-gray-50 min-h-screen flex items-center justify-center">
       <motion.div
@@ -16,7 +15,7 @@ const Login = (props) => {
             opacity: 1,
             scale: 1,
             transition: {
-              duration: 0.6
+              duration: 0.6,
             },
           },
         }}
@@ -28,9 +27,7 @@ const Login = (props) => {
           </p>
 
           {/* Formulario */}
-          <LoginForm 
-            onLogin={props.onLogin}
-          />
+          <LoginForm onLogin={props.onLogin} />
 
           <div className="mt-6 grid grid-cols-3 items-center text-gray-400">
             <hr className="border-gray-400" />
