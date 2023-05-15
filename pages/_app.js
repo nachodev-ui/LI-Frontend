@@ -1,10 +1,18 @@
-import "@/styles/globals.css";
-import { ThemeProvider } from "@material-tailwind/react";
+import { ThemeProvider } from '@material-tailwind/react'
+import { FiltersProvider } from '@/context/filters'
+import '../styles/globals.css'
+import { CartProvider } from '@/context/cart'
 
-export default function App({ Component, pageProps }) {
+const App = ({ Component, pageProps }) => {
   return (
     <ThemeProvider>
-      <Component {...pageProps} />
+      <FiltersProvider>
+        <CartProvider>
+          <Component {...pageProps} />
+        </CartProvider>
+      </FiltersProvider>
     </ThemeProvider>
-  );
+  )
 }
+
+export default App

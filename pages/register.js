@@ -1,10 +1,10 @@
 import Register from "@/components/Register"
-import ceo from "@/data/ceo"
+import Ceo from "@/components/Ceo"
 
 const register = () => {
   return (
     <div>
-        {ceo("Registro")}
+        <Ceo page="Registro" />
         
         <Register />
     </div>

@@ -1,0 +1,5 @@
+.blur-on-scroll {
+    backdrop-filter: blur(10px); /* Aplica el efecto de desenfoque */
+    transition: backdrop-filter 0.3s ease; /* Agrega una transición suave */
+  }
+  

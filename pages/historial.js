@@ -1,10 +1,10 @@
 import ProfileLayout from "@/components/ProfileLayout"
-import ceo from "@/data/ceo"
+import Ceo from "@/components/Ceo"
 
 const historial = () => {
   return (
     <div>
-        {ceo("Historial")}
+        <Ceo page="Historial" />
 
         <ProfileLayout />
 

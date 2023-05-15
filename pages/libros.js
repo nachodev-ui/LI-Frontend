@@ -1,16 +1,28 @@
-import ceo from "@/data/ceo"
-import ComplexNavbar from "@/components/Navbar"
+import ComplexNavbar from "@/components/Navbar";
+import Ceo from "@/components/Ceo";
+import Books from "@/components/Main";
+import { Filters } from "@/components/Filters";
 
-const Libros = () => {
+const Libros = ({ books }) => {
   return (
-    <div>
-      {ceo("Libros")}
+    <>
+      <Ceo page="Libros" description="Libros" />
 
       <ComplexNavbar />
 
-      <p className="text-gray-700 text-3xl mb-16 font-bold">Libros</p>
-    </div>
-  )
-}
+      <section className="flex flex-col w-1/4">
+        <h2 className="font-bold text-gray-700 text-xl mt-12 mx-8">
+          Filtra por tu género favorito
+        </h2>
 
-export default Libros
+        <Filters />
+      </section>
+
+      <section className="">
+        <Books books={books} />
+      </section>
+    </>
+  );
+};
+
+export default Libros;

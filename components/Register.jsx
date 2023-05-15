@@ -1,8 +1,9 @@
 import { useState } from "react";
-import Link from "next/link";
-import axios from "axios";
 import { basicSchema } from "@/schemas";
 import { useFormik } from "formik";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import axios from "axios";
 
 // Validate username if is 'admin', etc
 export const validate = (values) => {
@@ -83,9 +84,31 @@ const Register = () => {
     validate,
   });
 
+  // Const animation (framer-motion) left to right
+  const leftToRight = {
+    hidden: {
+      x: -1000,
+      opacity: 0,
+    },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        type: "spring",
+        stiffness: 50,
+      },
+    },
+  };
+
   return (
     <section className="bg-gray-50 min-h-screen flex items-center justify-center">
-      <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center">
+      <motion.div 
+        className="leftToRight bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center"
+        variants={leftToRight}  
+        initial="hidden"
+        animate="visible"
+      >
         <div className="md:w-1/2 px-12 md:px-12">
           <h2 className="font-bold text-2xl text-[#978284]">Registro</h2>
           <p className="text-xs mt-2 mb-8 text-[#9f888b]">
@@ -233,7 +256,7 @@ const Register = () => {
         <div className="md:block hidden w-1/2">
           <img className="rounded-2xl" src="/img/li-signup.png" alt="" />
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

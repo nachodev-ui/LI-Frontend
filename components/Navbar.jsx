@@ -1,297 +1,275 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Navbar,
+  Collapse,
   Typography,
   Button,
+  IconButton,
+  List,
+  ListItem,
   Menu,
   MenuHandler,
   MenuList,
   MenuItem,
-  Avatar,
-  Card,
-  IconButton,
-  Tooltip,
-  Collapse
+  Chip,
 } from "@material-tailwind/react";
 import {
-  UserCircleIcon,
-  Square3Stack3DIcon,
   ChevronDownIcon,
-  PowerIcon,
-  BookmarkSquareIcon,
-  Bars2Icon,
-  UserGroupIcon,
-  EnvelopeIcon,
-  ChatBubbleLeftRightIcon,
+  UserCircleIcon,
+  Bars3Icon,
+  XMarkIcon,
+  FlagIcon,
+  FolderIcon,
+  Square3Stack3DIcon,
+  RocketLaunchIcon,
+  BookOpenIcon,
   ShoppingBagIcon,
-  UserIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import {} from "../styles/Navbar.module.css";
 
-// profile menu component
-const profileMenuItems = [
-  {
-    label: "Mi perfil",
-    icon: UserCircleIcon,
-  },
-  {
-    label: "Mis compras",
-    icon: ShoppingBagIcon,
-  },
-  {
-    label: "Cerrar sesión",
-    icon: PowerIcon,
-  },
-];
+const colors = {
+  blue: "bg-blue-50 text-blue-500",
+  orange: "bg-orange-50 text-orange-500",
+  green: "bg-green-50 text-green-500",
+  "blue-gray": "bg-blue-gray-50 text-blue-gray-500",
+  purple: "bg-purple-50 text-purple-500",
+  teal: "bg-teal-50 text-teal-500",
+  cyan: "bg-cyan-50 text-cyan-500",
+  pink: "bg-pink-50 text-pink-500",
+};
 
-export function ProfileMenu() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isLogged, setIsLogged] = useState(false);
-  const closeMenu = () => setIsMenuOpen(false);
-
-  if (!isLogged) {
-    return (
-      <Link
-        href="/login"
-        variant="text"
-        color="blue-gray"
-        className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
-      >
-        <Tooltip content="Presiona para iniciar sesión" placement="bottom">
-          <UserIcon className="h-6 w-6" />
-        </Tooltip>
-      </Link>
-    );
-  }
-
-  return (
-    <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
-      <MenuHandler>
-        <Button
-          variant="text"
-          color="blue-gray"
-          className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
-        >
-          <>
-            <Avatar
-              variant="circular"
-              size="sm"
-              alt="candice wu"
-              className="border border-blue-500 p-0.5"
-              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
-            />
-            <ChevronDownIcon
-              strokeWidth={2}
-              className={`h-3 w-3 transition-transform ${
-                isMenuOpen ? "rotate-180" : ""
-              }`}
-            />
-          </>
-        </Button>
-      </MenuHandler>
-      <MenuList className="p-1">
-        {profileMenuItems.map(({ label, icon }, key) => {
-          const isLastItem = key === profileMenuItems.length - 1;
-          return (
-            <MenuItem
-              key={label}
-              onClick={closeMenu}
-              className={`flex items-center gap-2 rounded ${
-                isLastItem
-                  ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
-                  : ""
-              }`}
-            >
-              {React.createElement(icon, {
-                className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
-                strokeWidth: 2,
-              })}
-              <Typography
-                as="span"
-                variant="small"
-                className="font-normal"
-                color={isLastItem ? "red" : "inherit"}
-              >
-                {label}
-              </Typography>
-            </MenuItem>
-          );
-        })}
-      </MenuList>
-    </Menu>
-  );
-}
-
-// Lista navbar (servicios)
 const navListMenuItems = [
   {
-    href: "/libros",
-    title: "Librería",
-    description:
-      "Encuentra los mejores libros para tu negocio, escuela o hogar.",
+    color: "blue",
+    icon: FlagIcon,
+    title: "Mantención",
+    description: "Realizamos mantención a tus libros favoritos.",
   },
   {
-    href: "/mantenimiento",
-    title: "Mantenimiento",
-    description:
-      "Realizamos mantenimiento a tus libros para que estén en perfectas condiciones.",
+    color: "green",
+    icon: RocketLaunchIcon,
+    title: (
+      <div className="flex items-center gap-1">
+        Despacho{" "}
+        <Chip
+          size="sm"
+          color="green"
+          variant="ghost"
+          value="¡Seguimiento!"
+          className="capitalize"
+        />
+      </div>
+    ),
+    description: "Ofrecemos despacho y seguimiento de tu compra.",
+  },
+  {
+    color: "purple",
+    icon: ShoppingBagIcon,
+    title: "Carro de compras",
+    description: "Revisa tu carro de compras y realiza tu compra.",
   },
 ];
 
 function NavListMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
-  const triggers = {
-    onMouseEnter: () => setIsMenuOpen(true),
-    onMouseLeave: () => setIsMenuOpen(false),
-  };
-
-  const renderItems = navListMenuItems.map(({ title, description, href }) => (
-    <Link href={href} key={title}>
-      <MenuItem>
-        <Typography variant="h6" color="blue-gray" className="mb-1">
-          {title}
-        </Typography>
-        <Typography variant="small" color="gray" className="font-normal">
-          {description}
-        </Typography>
-      </MenuItem>
-    </Link>
-  ));
+  const renderItems = navListMenuItems.map(
+    ({ icon, title, description, color }, key) => (
+      <a href="#" key={key}>
+        <MenuItem className="flex items-center gap-3 rounded-lg">
+          <div className={`rounded-lg p-5 ${colors[color]}`}>
+            {React.createElement(icon, {
+              strokeWidth: 2,
+              className: "h-6 w-6",
+            })}
+          </div>
+          <div>
+            <Typography
+              variant="h6"
+              color="blue-gray"
+              className="flex items-center text-sm"
+            >
+              {title}
+            </Typography>
+            <Typography variant="small" color="gray" className="font-normal">
+              {description}
+            </Typography>
+          </div>
+        </MenuItem>
+      </a>
+    )
+  );
 
   return (
     <React.Fragment>
-      <Menu open={isMenuOpen} handler={setIsMenuOpen}>
+      <Menu
+        open={isMenuOpen}
+        handler={setIsMenuOpen}
+        offset={{ mainAxis: 20 }}
+        placement="bottom"
+        allowHover={true}
+      >
         <MenuHandler>
-          <Typography as="a" href="#" variant="small" className="font-normal">
-            <MenuItem
-              {...triggers}
-              className="hidden items-center gap-2 text-blue-gray-900 lg:flex lg:rounded-full"
+          <Typography as="div" variant="small" className="font-normal">
+            <ListItem
+              className="flex items-center gap-2 py-2 pr-4"
+              selected={isMenuOpen || isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >
-              <Square3Stack3DIcon className="h-[18px] w-[18px]" /> Servicios{" "}
+              <Square3Stack3DIcon className="h-[18px] w-[18px]" />
+              Servicios
               <ChevronDownIcon
-                strokeWidth={2}
-                className={`h-3 w-3 transition-transform ${
+                strokeWidth={2.5}
+                className={`hidden h-3 w-3 transition-transform lg:block ${
                   isMenuOpen ? "rotate-180" : ""
                 }`}
               />
-            </MenuItem>
+              <ChevronDownIcon
+                strokeWidth={2.5}
+                className={`block h-3 w-3 transition-transform lg:hidden ${
+                  isMobileMenuOpen ? "rotate-180" : ""
+                }`}
+              />
+            </ListItem>
           </Typography>
         </MenuHandler>
-        <MenuList
-          {...triggers}
-          className="hidden w-[36rem] grid-cols-7 gap-3 overflow-visible lg:grid"
-        >
-          <Card
-            color="cyan"
-            shadow={false}
-            variant="gradient"
-            className="col-span-3 grid h-full w-full place-items-center rounded-md"
-          >
-            <BookmarkSquareIcon strokeWidth={1} className="h-28 w-28" />
-          </Card>
-          <ul className="col-span-4 flex w-full flex-col gap-1">
-            {renderItems}
-          </ul>
+        <MenuList className="hidden max-w-screen-xl rounded-xl lg:block">
+          <ul className="grid grid-cols-4 gap-y-2">{renderItems}</ul>
         </MenuList>
       </Menu>
-      <MenuItem className="flex items-center gap-2 text-blue-gray-900 lg:hidden">
-        <Square3Stack3DIcon className="h-[18px] w-[18px]" /> Pages{" "}
-      </MenuItem>
-      <ul className="ml-6 flex w-full flex-col gap-1 lg:hidden">
-        {renderItems}
-      </ul>
+      <div className="block lg:hidden">
+        <Collapse open={isMobileMenuOpen}>{renderItems}</Collapse>
+      </div>
     </React.Fragment>
   );
 }
 
-// Categorias navbar
-const navListCategories = [
-  {
-    category: "Aventura",
-  },
-  {
-    category: "Terror",
-    href: "/terror",
-  },
-];
-
-// Lista del navbar
-const navListItems = [
-  {
-    label: "Equipo",
-    icon: UserGroupIcon,
-  },
-  {
-    label: "Contáctanos",
-    icon: EnvelopeIcon,
-  },
-  {
-    label: "Soporte",
-    icon: ChatBubbleLeftRightIcon,
-  },
-];
-
 function NavList() {
   return (
-    <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
+    <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
+      <Typography
+        as="a"
+        href="/libros"
+        variant="small"
+        color="blue-gray"
+        className="font-normal"
+      >
+        <ListItem className="flex items-center gap-2 py-2 pr-4">
+          <BookOpenIcon className="h-[18px] w-[18px]" />
+          Libros
+        </ListItem>
+      </Typography>
       <NavListMenu />
-      {navListItems.map(({ label, icon }, key) => (
-        <Typography
-          key={label}
-          as="a"
-          href="#"
-          variant="small"
-          color="blue-gray"
-          className="font-normal"
-        >
-          <MenuItem className="flex items-center gap-2 lg:rounded-full">
-            {React.createElement(icon, { className: "h-[18px] w-[18px]" })}{" "}
-            {label}
-          </MenuItem>
-        </Typography>
-      ))}
-    </ul>
+      <Typography
+        as="a"
+        href="/cart"
+        variant="small"
+        color="blue-gray"
+        className="font-normal"
+      >
+        <ListItem className="flex items-center gap-2 py-2 pr-4">
+          <ShoppingBagIcon className="h-[18px] w-[18px]" />
+          Mi carro
+        </ListItem>
+      </Typography>
+      <Typography
+        as="a"
+        href="#"
+        variant="small"
+        color="blue-gray"
+        className="font-normal"
+      >
+        <ListItem className="flex items-center gap-2 py-2 pr-4">
+          <UserCircleIcon className="h-[18px] w-[18px]" />
+          Cuenta
+        </ListItem>
+      </Typography>
+    </List>
   );
 }
 
-export default function ComplexNavbar() {
-  const [isNavOpen, setIsNavOpen] = React.useState(false);
-  const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
+export default function Example() {
+  const [openNav, setOpenNav] = React.useState(false);
+  const [isNavbarBlurred, setIsNavbarBlurred] = React.useState(false);
 
   React.useEffect(() => {
     window.addEventListener(
       "resize",
-      () => window.innerWidth >= 960 && setIsNavOpen(false)
+      () => window.innerWidth >= 960 && setOpenNav(false)
     );
   }, []);
 
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const shouldNavbarBeBlurred = scrollTop > 0; // Verifica si el scroll está en la parte superior
+
+      setIsNavbarBlurred(shouldNavbarBeBlurred);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Limpia el evento de scroll cuando el componente se desmonta
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <Navbar className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6">
-      <div className="relative mx-auto flex items-center text-blue-gray-900">
+    <Navbar
+      className={`sticky inset-0 z-10 h-max max-w-full py-2 px-3 lg:px-8 lg:py-3 ${
+        isNavbarBlurred ? "blur-on-scroll" : ""
+      }`}
+    >
+      <div className="flex items-center justify-between text-blue-gray-900">
         <Typography
           as="a"
           href="/"
-          className="mr-4 ml-2 cursor-pointer py-1.5 font-medium"
+          variant="h6"
+          className="mr-4 cursor-pointer py-1.5 lg:ml-2"
         >
           Librería Imagina
         </Typography>
-        <div className="absolute top-2/4 left-2/4 hidden -translate-x-2/4 -translate-y-2/4 lg:block">
+        <div className="hidden lg:block">
           <NavList />
         </div>
+        <div className="hidden gap-2 lg:flex">
+          <Link href="/login">
+            <Button variant="text" size="sm" color="blue-gray" fullWidth>
+              Iniciar sesión
+            </Button>
+          </Link>
+          <Button className="bg-[#F6C38C]" size="sm">
+            Registrar
+          </Button>
+        </div>
         <IconButton
-          size="sm"
-          color="blue-gray"
           variant="text"
-          onClick={toggleIsNavOpen}
-          className="ml-auto mr-2 lg:hidden"
+          color="blue-gray"
+          className="lg:hidden"
+          onClick={() => setOpenNav(!openNav)}
         >
-          <Bars2Icon className="h-6 w-6" />
+          {openNav ? (
+            <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+          ) : (
+            <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+          )}
         </IconButton>
-        <ProfileMenu />
       </div>
-      <Collapse open={isNavOpen}>
+      <Collapse open={openNav}>
         <NavList />
+        <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
+          <Link href="/login" className="w-full">
+            <Button variant="outlined" size="sm" color="blue-gray" fullWidth>
+              Iniciar
+            </Button>
+          </Link>
+          <Button variant="gradient" size="sm" fullWidth>
+            Registrar
+          </Button>
+        </div>
       </Collapse>
     </Navbar>
   );
