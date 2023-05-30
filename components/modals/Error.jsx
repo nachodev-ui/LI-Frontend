@@ -1,7 +1,7 @@
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion'
 
 const Error = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   const backdrop = {
     hidden: {
@@ -10,29 +10,29 @@ const Error = ({ isOpen, onClose, children }) => {
     visible: {
       opacity: 1,
     },
-  };
+  }
 
   const modal = {
     hidden: {
-      y: "-100vh",
+      y: '-100vh',
       opacity: 0,
     },
     visible: {
-      y: "0",
+      y: '0',
       opacity: 1,
       transition: { delay: 0.2 },
     },
-  };
+  }
 
   return (
     <>
-      <motion.div 
+      <motion.div
         className="backdrop justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
         variants={backdrop}
         initial="hidden"
         animate="visible"
         exit="hidden"
-        >
+      >
         <div
           className="modal relative w-auto my-6 mx-auto max-w-lg"
           variants={modal}
@@ -65,7 +65,7 @@ const Error = ({ isOpen, onClose, children }) => {
       </motion.div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>
-  );
-};
+  )
+}
 
-export default Error;
+export default Error
