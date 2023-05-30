@@ -4,18 +4,45 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { TimePicker, DatePicker } from '@mui/x-date-pickers'
 import { TextField, TextareaAutosize } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import 'dayjs/locale/es'
+import axios from 'axios'
 
 const Mantencion = () => {
   const [dateTime, setDateTime] = useState(null)
+  const [userId, setUserId] = useState(null)
+  const [email, setEmail] = useState('')
+  const [descripcion, setDescripcion] = useState('')
 
   const handleDateTimeChange = (date) => {
     const formattedDateTime = date
       ? dayjs(date).format('DD/MM/YYYY HH:mm')
       : null
     setDateTime(formattedDateTime)
+  }
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    setUserId(user?.id)
+  }, [])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const response = await axios.post('http://localhost:5000/api/requests', {
+      correo: email,
+      comentarios: descripcion,
+      fecha_solicitud: dateTime,
+      id_user: userId,
+      estado: 'Pendiente',
+    })
+
+    if (response.status === 200 || response.status === 201) {
+      // TODO: Show success message
+    }
+
+    console.log(response.data)
   }
 
   return (
@@ -27,7 +54,7 @@ const Mantencion = () => {
               className="title-font sm:text-4xl text-3xl mb-4 font-bold text-gray-800"
               initial={{ opacity: 0, left: 500, scale: 0.5 }}
               whileInView={{ opacity: 1, left: 0, scale: 1 }}
-              transition={{ duration: 1 }}
+              transition={{ duration: 0.5 }}
             >
               Servicio de Mantenciones
               <br className="hidden lg:inline-block" />
@@ -88,6 +115,11 @@ const Mantencion = () => {
                 dateAdapter={AdapterDayjs}
                 adapterLocale="es"
               >
+                <TextField
+                  label="Correo electrónico"
+                  className="mt-2 mb-2"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
                 <DatePicker
                   className="mt-2 border-gray-200"
                   disablePast
@@ -115,13 +147,15 @@ const Mantencion = () => {
                 </p>
               </LocalizationProvider>
               <TextareaAutosize
-                className='border border-gray-400 mt-8 py-4 rounded placeholder:font-bold placeholder:text-center'
-                placeholder='Proporcione detalles sobre su solicitud de mantenimiento.'
-              >
-
-              </TextareaAutosize>
+                className="border border-gray-400 mt-8 py-4 rounded placeholder:font-bold placeholder:text-center"
+                placeholder="Proporcione detalles sobre su solicitud de mantenimiento."
+                onChange={(e) => setDescripcion(e.target.value)}
+              ></TextareaAutosize>
             </div>
-            <button className="w-full mt-2 py-3 font-bold text-sm tracking-wider text-gray-100 uppercase transition-colors duration-300 transform bg-[#C97A76] rounded-md hover:bg-[#e06f69] focus:bg-[#C97A76] focus:outline-none">
+            <button
+              className="w-full mt-2 py-3 font-bold text-sm tracking-wider text-gray-100 uppercase transition-colors duration-300 transform bg-[#C97A76] rounded-md hover:bg-[#e06f69] focus:bg-[#C97A76] focus:outline-none"
+              onClick={handleSubmit}
+            >
               Envíar solicitud
             </button>
           </form>
