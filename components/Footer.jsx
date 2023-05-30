@@ -1,22 +1,31 @@
-import { Typography } from "@material-tailwind/react";
-import Image from "next/image";
+import { Typography } from '@material-tailwind/react'
+import Link from 'next/link'
 
 const links = [
   {
-    title: "Servicios",
-    items: ["Ventas", "Mantenciones", "Reparaciones", "Seguimiento"],
+    title: 'Servicios',
+    href: '/servicios',
+    items: [
+      { name: 'Ventas', href: '/ventas' },
+      { name: 'Mantenciones', href: '/mantenciones' },
+      { name: 'Seguimiento', href: '/seguimiento' },
+    ],
   },
   {
-    title: "Compañía",
-    items: ["Nosotros", "Socios"],
+    title: 'Compañía',
+    href: '/compania',
+    items: [
+      { name: 'Nosotros', href: '/nosotros' },
+      { name: 'Socios', href: '/socios' },
+    ],
   },
   {
-    title: "Recursos",
-    items: ["React", "Newsletter", "Events", "Help center"],
+    title: 'Socios',
+    href: '/socios',
+    items: [{ name: 'ALPHILIA', href: 'https://www.alphilia.cl/' }],
   },
-];
-
-const currentYear = new Date().getFullYear();
+]
+const currentYear = new Date().getFullYear()
 
 const Footer = () => {
   return (
@@ -27,24 +36,24 @@ const Footer = () => {
             Librería Imagina
           </Typography>
           <div className="grid grid-cols-3 justify-between gap-4">
-            {links.map(({ title, items }) => (
+            {links.map(({ title, items, href }) => (
               <ul key={title}>
                 <Typography
                   variant="small"
                   color="blue-gray"
                   className="mb-3 font-medium opacity-40"
                 >
-                  {title}
+                  <Link href={href}>{title}</Link>
                 </Typography>
                 {items.map((link) => (
-                  <li key={link}>
+                  <li key={link.name}>
                     <Typography
                       as="a"
-                      href="#"
+                      href={link.href}
                       color="gray"
                       className="py-1.5 font-normal transition-colors hover:text-blue-gray-900"
                     >
-                      {link}
+                      {link.name}
                     </Typography>
                   </li>
                 ))}
@@ -57,7 +66,7 @@ const Footer = () => {
             variant="small"
             className="mb-4 text-center font-normal text-blue-gray-900 md:mb-0"
           >
-            &copy; {currentYear}{" "}
+            &copy; {currentYear}{' '}
             <a href="https://material-tailwind.com/">TESS Solutions</a>. Todos
             los derechos reservados.
           </Typography>
@@ -134,7 +143,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer
