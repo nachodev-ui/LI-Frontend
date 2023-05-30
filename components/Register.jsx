@@ -1,42 +1,58 @@
-import { useState } from "react";
-import { basicSchema } from "@/schemas";
-import { useFormik } from "formik";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import axios from "axios";
+import { useState } from 'react'
+import { basicSchema } from '@/schemas'
+import { useFormik } from 'formik'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import Router from 'next/router'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
 // Validate username if is 'admin', etc
 export const validate = (values) => {
-  const errors = {};
+  const errors = {}
 
   if (
     [
-      "admin",
-      "superadmin",
-      "root",
-      "administrator",
-      "administrador",
-      "null",
+      'admin',
+      'superadmin',
+      'root',
+      'administrator',
+      'administrador',
+      'null',
     ].includes(values.username)
   ) {
-    errors.username = "No puedes usar ese nombre de usuario";
+    errors.username = 'No puedes usar ese nombre de usuario'
   }
 
   if (values.password !== values.confirmPassword) {
-    errors.confirmPassword = "Las contraseñas no coinciden";
+    errors.confirmPassword = 'Las contraseñas no coinciden'
   }
 
-  return errors;
-};
+  return errors
+}
 
 const Register = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [showModal, setShowModal] = useState(false)
 
   const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+    setShowPassword(!showPassword)
+  }
+
+  const successModal = () => {
+    Swal.fire({
+      icon: 'success',
+      title: '¡Registro exitoso!',
+      text: 'Ahora puedes iniciar sesión',
+      confirmButtonText: 'Iniciar sesión',
+      confirmButtonColor: '#978284',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Router.push('/login')
+      }
+    })
+  }
 
   const {
     values,
@@ -48,41 +64,43 @@ const Register = () => {
     handleSubmit,
   } = useFormik({
     initialValues: {
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
     validationSchema: basicSchema,
     onSubmit: async (values, actions) => {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000))
 
       try {
         const user = {
           username: values.username,
           correo: values.email,
-          password: values.username,
+          password: values.password,
           confirmPassword: values.confirmPassword,
-        };
+        }
 
         const response = await axios.post(
-          "http://localhost:5000/auth/signup",
+          'http://localhost:5000/auth/signup',
           user
-        );
+        )
 
-        console.log(response.data);
-        actions.resetForm();
+        if (response.status === 201) {
+          actions.resetForm()
+          successModal()
+        }
       } catch (e) {
         if (e.response.data && Object.keys(e.response.data).length > 0) {
-          setErrorMessage(e.response.data);
-          setShowModal(true);
+          setErrorMessage(e.response.data)
+          setShowModal(true)
         } else {
-          console.log("Error desconocido");
+          console.log('Error desconocido')
         }
       }
     },
     validate,
-  });
+  })
 
   // Const animation (framer-motion) left to right
   const leftToRight = {
@@ -95,17 +113,17 @@ const Register = () => {
       opacity: 1,
       transition: {
         duration: 0.5,
-        type: "spring",
+        type: 'spring',
         stiffness: 50,
       },
     },
-  };
+  }
 
   return (
     <section className="bg-gray-50 min-h-screen flex items-center justify-center">
-      <motion.div 
+      <motion.div
         className="leftToRight bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center"
-        variants={leftToRight}  
+        variants={leftToRight}
         initial="hidden"
         animate="visible"
       >
@@ -124,8 +142,8 @@ const Register = () => {
             <input
               className={
                 errors.username && touched.username
-                  ? "input-error"
-                  : "text-sm p-2 rounded-xl border"
+                  ? 'input-error'
+                  : 'text-sm p-2 rounded-xl border'
               }
               value={values.username}
               onChange={handleChange}
@@ -139,8 +157,8 @@ const Register = () => {
             <input
               className={
                 errors.email && touched.email
-                  ? "input-error"
-                  : "text-sm p-2 rounded-xl border"
+                  ? 'input-error'
+                  : 'text-sm p-2 rounded-xl border'
               }
               value={values.email}
               onChange={handleChange}
@@ -155,10 +173,10 @@ const Register = () => {
               <input
                 className={
                   errors.password && touched.password
-                    ? "input-error"
-                    : "text-sm rounded-xl border w-full"
+                    ? 'input-error'
+                    : 'text-sm rounded-xl border w-full'
                 }
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 placeholder="Mínimo 5 caracteres"
                 onChange={handleChange}
@@ -168,8 +186,8 @@ const Register = () => {
               <svg
                 className={
                   errors.password && touched.password
-                    ? "bi bi-eye absolute top-1/3 right-3 -translate-y-1/2  cursor-pointer"
-                    : "bi bi-eye absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
+                    ? 'bi bi-eye absolute top-1/3 right-3 -translate-y-1/2  cursor-pointer'
+                    : 'bi bi-eye absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer'
                 }
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -181,26 +199,30 @@ const Register = () => {
                 <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
                 <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
               </svg>
-              {errors.password && touched.password && <p className="mt-3">{errors.password}</p>}
+              {errors.password && touched.password && (
+                <p className="mt-3">{errors.password}</p>
+              )}
             </div>
             <input
               className={
                 errors.password && touched.password
-                  ? "input-error"
-                  : "text-sm rounded-xl border w-full"
+                  ? 'input-error'
+                  : 'text-sm rounded-xl border w-full'
               }
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               name="confirmPassword"
               placeholder="Confirmar contraseña"
               onChange={handleChange}
               value={values.confirmPassword}
               onBlur={handleBlur}
             />
-            {errors.confirmPassword && touched.confirmPassword && <p>{errors.confirmPassword}</p>}
-            <button 
+            {errors.confirmPassword && touched.confirmPassword && (
+              <p>{errors.confirmPassword}</p>
+            )}
+            <button
               className="bg-[#CBB8BA] rounded-xl text-white py-2 hover:scale-105 duration-300"
               type="submit"
-              disabled={isSubmitting}  
+              disabled={isSubmitting}
             >
               Crear cuenta
             </button>
@@ -245,7 +267,7 @@ const Register = () => {
 
           <div className="font-extralight ">
             <p className="text-sm mt-2 text-[#9d878a]">
-              ¿Ya tienes cuenta?{" "}
+              ¿Ya tienes cuenta?{' '}
               <span className="text-[#ad9b9d] cursor-pointer">
                 <Link href="/login">Iniciar sesión</Link>
               </span>
@@ -258,7 +280,7 @@ const Register = () => {
         </div>
       </motion.div>
     </section>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register
