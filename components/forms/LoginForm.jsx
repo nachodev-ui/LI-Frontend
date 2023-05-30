@@ -1,80 +1,86 @@
-import { useState } from "react";
-import { useFormik } from "formik";
-import axios from "axios";
-import Error from "../modals/Error";
-import { useRouter } from "next/router";
+import { useState } from 'react'
+import { useFormik } from 'formik'
+import { useRouter } from 'next/router'
+import axios from 'axios'
+import Error from '../modals/Error'
 
 const validate = (values) => {
-  const errors = {};
+  const errors = {}
 
   // Regex para validar el correo
-  const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+  const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
 
   if (!values.correo) {
-    errors.correo = "El correo es requerido";
+    errors.correo = 'El correo es requerido'
   } else if (!emailRegex.test(values.correo)) {
-    errors.correo = "El correo no es válido";
+    errors.correo = 'El correo no es válido'
   }
 
   if (!values.password) {
-    errors.password = "La contraseña es requerida";
+    errors.password = 'La contraseña es requerida'
   }
 
-  return errors;
-};
+  return errors
+}
 
 const LoginForm = () => {
-  const [error, setError] = useState(null);
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
-  const [showPassword, setShowPassword] =  useState(false);
-  const router = useRouter();
+  const [error, setError] = useState('')
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [authToken, setAuthToken] = useState('')
+  const router = useRouter()
 
   const handleCloseErrorModal = () => {
-    setIsErrorModalOpen(false);
-  };
+    setIsErrorModalOpen(false)
+  }
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword)
   }
 
   const onSubmit = async (values) => {
-
     try {
       const response = await axios.post(
-        "http://localhost:5000/auth/signin",
+        'http://localhost:5000/auth/signin',
         values
-      );
-      const { token, user } = response.data;
-      console.log(token, user);
+      )
+      if (response.data && response.data.data) {
+        const { token, user } = response.data.data
+        console.log(token, user)
 
-      if (response.data && response.data.token) {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        if (token) {
+          localStorage.setItem('authToken', token)
+          setAuthToken(token)
 
-        router.push("/");
-      } else {
-        console.log("Error desconocido");
+          if (user) {
+            localStorage.setItem('user', JSON.stringify(user))
+          }
+
+          router.push('/')
+        } else {
+          console.log('Error desconocido')
+        }
       }
     } catch (error) {
-      const { response } = error;
-      console.log(response.data);
+      const { response } = error
+      console.log(response.data)
 
-      const { message } = response.data;
+      const { message } = response.data
 
-      setError(message);
-      setIsErrorModalOpen(true);
+      setError(message)
+      setIsErrorModalOpen(true)
     }
-  };
+  }
 
   const { values, handleBlur, handleChange, handleSubmit, errors, touched } =
     useFormik({
       initialValues: {
-        correo: "",
-        password: "",
+        correo: '',
+        password: '',
       },
       onSubmit,
       validate,
-    });
+    })
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -91,7 +97,7 @@ const LoginForm = () => {
       <div className="relative">
         <input
           className="text-sm p-2 rounded-xl border w-full"
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? 'text' : 'password'}
           name="password"
           placeholder="Contraseña"
           value={values.password}
@@ -101,8 +107,8 @@ const LoginForm = () => {
         <svg
           className={
             errors.password && touched.password
-              ? "bi bi-eye absolute top-1/4 right-3 -translate-y-1/2  cursor-pointer"
-              : "bi bi-eye absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
+              ? 'bi bi-eye absolute top-1/4 right-3 -translate-y-1/2  cursor-pointer'
+              : 'bi bi-eye absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer'
           }
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -128,7 +134,7 @@ const LoginForm = () => {
         {error}
       </Error>
     </form>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm
