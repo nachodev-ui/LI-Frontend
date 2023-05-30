@@ -1,23 +1,23 @@
-import { useState } from "react";
-import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
-import { motion } from "framer-motion";
+import { useState } from 'react'
+import { BsChevronCompactLeft, BsChevronCompactRight } from 'react-icons/bs'
+import { motion } from 'framer-motion'
 
 const Slide = () => {
   const slides = [
     {
-      url: "/img/lib-one.avif",
+      url: '/img/lib-one.avif',
     },
-  ];
+  ]
 
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0)
 
   const prevSlide = () => {
-    setCurrentSlide(currentSlide === 0 ? slides.length - 1 : currentSlide - 1);
-  };
+    setCurrentSlide(currentSlide === 0 ? slides.length - 1 : currentSlide - 1)
+  }
 
   const nextSlide = () => {
-    setCurrentSlide(currentSlide === slides.length - 1 ? 0 : currentSlide + 1);
-  };
+    setCurrentSlide(currentSlide === slides.length - 1 ? 0 : currentSlide + 1)
+  }
 
   const imgContainer = {
     hidden: { opacity: 1, scale: 0 },
@@ -29,10 +29,10 @@ const Slide = () => {
         staggerChildren: 0.2,
       },
     },
-  };
+  }
 
   return (
-    <div className="max-w-[1200px] h-[550px] w-full m-auto py-16 px-4 relative">
+    <div className="max-w-[1300px] h-[650px] w-full m-auto py-16 px-4 relative mt-4 mb-12">
       <motion.div
         style={{ backgroundImage: `url(${slides[currentSlide].url})` }}
         className="imgContainer w-full h-full rounded-2xl bg-center bg-cover duration-500"
@@ -51,7 +51,7 @@ const Slide = () => {
         </div>
       </motion.div>
     </div>
-  );
-};
+  )
+}
 
-export default Slide;
+export default Slide
