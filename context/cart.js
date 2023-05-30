@@ -18,7 +18,11 @@ function useCartReducer() {
       payload: book,
     })
 
-  const clearCart = () => dispatch({ type: 'CLEAR_CART' })
+  const clearCart = (book) =>
+    dispatch({
+      type: 'CLEAR_CART',
+      payload: book,
+    })
 
   return { state, addToCart, removeFromCart, clearCart }
 }
