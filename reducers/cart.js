@@ -21,13 +21,17 @@ const UPDATE_STATE_BY_ACTION = {
     const productInCartIndex = state.findIndex((book) => book.id === id)
 
     if (productInCartIndex >= 0) {
-      const newState = structuredClone(state)
-      newState[productInCartIndex].quantity += 1
+      return state.map((book, index) => {
+        if (index !== productInCartIndex) {
+          return book
+        }
 
-      return newState
+        return {
+          ...book,
+          quantity: book.quantity + 1,
+        }
+      })
     }
-
-    console.log('action.payload', action.payload)
 
     return [
       ...state,
@@ -40,13 +44,36 @@ const UPDATE_STATE_BY_ACTION = {
 
   [CART_ACTION_TYPES.REMOVE_FROM_CART]: (state, action) => {
     const { id } = action.payload
+    const productInCartIndex = state.findIndex((book) => book.id === id)
+
+    if (productInCartIndex >= 0) {
+      return state.reduce((acc, book, index) => {
+        if (index !== productInCartIndex) {
+          return [...acc, book]
+        }
+
+        if (book.quantity > 1) {
+          return [
+            ...acc,
+            {
+              ...book,
+              quantity: book.quantity - 1,
+            },
+          ]
+        }
+
+        return acc
+      }, [])
+    }
+
+    return state
+  },
+
+  [CART_ACTION_TYPES.CLEAR_CART]: (state, action) => {
+    const { id } = action.payload
     const newState = state.filter((book) => book.id !== id)
 
     return newState
-  },
-
-  [CART_ACTION_TYPES.CLEAR_CART]: () => {
-    return []
   },
 }
 
