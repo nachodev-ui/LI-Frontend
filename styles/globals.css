@@ -52,3 +52,8 @@ form p {
   margin: 0 auto;
 }
 
+input.some-input::placeholder {
+  font-size: 0.875rem;
+  text-align: center;
+}
+
