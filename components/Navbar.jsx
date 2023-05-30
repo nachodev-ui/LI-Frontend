@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Navbar,
   Collapse,
@@ -12,46 +12,49 @@ import {
   MenuList,
   MenuItem,
   Chip,
-} from "@material-tailwind/react";
+} from '@material-tailwind/react'
 import {
   ChevronDownIcon,
   UserCircleIcon,
   Bars3Icon,
   XMarkIcon,
   FlagIcon,
-  FolderIcon,
+  ArrowRightOnRectangleIcon,
   Square3Stack3DIcon,
   RocketLaunchIcon,
   BookOpenIcon,
   ShoppingBagIcon,
-} from "@heroicons/react/24/outline";
-import Link from "next/link";
-import {} from "../styles/Navbar.module.css";
+} from '@heroicons/react/24/outline'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { Toaster, toast } from 'sonner'
+import {} from '../styles/Navbar.module.css'
 
 const colors = {
-  blue: "bg-blue-50 text-blue-500",
-  orange: "bg-orange-50 text-orange-500",
-  green: "bg-green-50 text-green-500",
-  "blue-gray": "bg-blue-gray-50 text-blue-gray-500",
-  purple: "bg-purple-50 text-purple-500",
-  teal: "bg-teal-50 text-teal-500",
-  cyan: "bg-cyan-50 text-cyan-500",
-  pink: "bg-pink-50 text-pink-500",
-};
+  blue: 'bg-blue-50 text-blue-500',
+  orange: 'bg-orange-50 text-orange-500',
+  green: 'bg-green-50 text-green-500',
+  'blue-gray': 'bg-blue-gray-50 text-blue-gray-500',
+  purple: 'bg-purple-50 text-purple-500',
+  teal: 'bg-teal-50 text-teal-500',
+  cyan: 'bg-cyan-50 text-cyan-500',
+  pink: 'bg-pink-50 text-pink-500',
+}
 
 const navListMenuItems = [
   {
-    color: "blue",
+    color: 'blue',
     icon: FlagIcon,
-    title: "Mantención",
-    description: "Realizamos mantención a tus libros favoritos.",
+    title: 'Mantención',
+    description: 'Realizamos mantención a tus libros favoritos.',
+    href: '/mantenciones',
   },
   {
-    color: "green",
+    color: 'green',
     icon: RocketLaunchIcon,
     title: (
       <div className="flex items-center gap-1">
-        Despacho{" "}
+        Despacho{' '}
         <Chip
           size="sm"
           color="green"
@@ -61,28 +64,30 @@ const navListMenuItems = [
         />
       </div>
     ),
-    description: "Ofrecemos despacho y seguimiento de tu compra.",
+    description: 'Ofrecemos despacho y seguimiento de tu compra.',
+    href: '/delivery',
   },
   {
-    color: "purple",
+    color: 'purple',
     icon: ShoppingBagIcon,
-    title: "Carro de compras",
-    description: "Revisa tu carro de compras y realiza tu compra.",
+    title: 'Carro de compras',
+    description: 'Revisa tu carro de compras y realiza tu compra.',
+    href: '/cart',
   },
-];
+]
 
 function NavListMenu() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
 
   const renderItems = navListMenuItems.map(
-    ({ icon, title, description, color }, key) => (
-      <a href="#" key={key}>
+    ({ icon, title, description, color, href }, key) => (
+      <a href={href} key={key}>
         <MenuItem className="flex items-center gap-3 rounded-lg">
           <div className={`rounded-lg p-5 ${colors[color]}`}>
             {React.createElement(icon, {
               strokeWidth: 2,
-              className: "h-6 w-6",
+              className: 'h-6 w-6',
             })}
           </div>
           <div>
@@ -100,7 +105,7 @@ function NavListMenu() {
         </MenuItem>
       </a>
     )
-  );
+  )
 
   return (
     <React.Fragment>
@@ -123,13 +128,13 @@ function NavListMenu() {
               <ChevronDownIcon
                 strokeWidth={2.5}
                 className={`hidden h-3 w-3 transition-transform lg:block ${
-                  isMenuOpen ? "rotate-180" : ""
+                  isMenuOpen ? 'rotate-180' : ''
                 }`}
               />
               <ChevronDownIcon
                 strokeWidth={2.5}
                 className={`block h-3 w-3 transition-transform lg:hidden ${
-                  isMobileMenuOpen ? "rotate-180" : ""
+                  isMobileMenuOpen ? 'rotate-180' : ''
                 }`}
               />
             </ListItem>
@@ -143,7 +148,7 @@ function NavListMenu() {
         <Collapse open={isMobileMenuOpen}>{renderItems}</Collapse>
       </div>
     </React.Fragment>
-  );
+  )
 }
 
 function NavList() {
@@ -176,7 +181,7 @@ function NavList() {
       </Typography>
       <Typography
         as="a"
-        href="#"
+        href="/perfil"
         variant="small"
         color="blue-gray"
         className="font-normal"
@@ -187,40 +192,61 @@ function NavList() {
         </ListItem>
       </Typography>
     </List>
-  );
+  )
 }
 
 export default function Example() {
-  const [openNav, setOpenNav] = React.useState(false);
-  const [isNavbarBlurred, setIsNavbarBlurred] = React.useState(false);
+  const [openNav, setOpenNav] = React.useState(false)
+  const [isNavbarBlurred, setIsNavbarBlurred] = React.useState(false)
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false)
+  const router = useRouter()
 
   React.useEffect(() => {
     window.addEventListener(
-      "resize",
+      'resize',
       () => window.innerWidth >= 960 && setOpenNav(false)
-    );
-  }, []);
+    )
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.clear()
+    setIsAuthenticated(false)
+
+    toast.success('Tu sesión ha sido cerrada, ¡vuelve pronto!', {
+      position: 'bottom-right',
+      duration: 5000,
+    })
+
+    router.push('/')
+  }
 
   React.useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const shouldNavbarBeBlurred = scrollTop > 0; // Verifica si el scroll está en la parte superior
+      const scrollTop = window.scrollY
+      const shouldNavbarBeBlurred = scrollTop > 0 // Verifica si el scroll está en la parte superior
 
-      setIsNavbarBlurred(shouldNavbarBeBlurred);
-    };
+      setIsNavbarBlurred(shouldNavbarBeBlurred)
+    }
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll)
+
+    const checkToken = async () => {
+      const token = await localStorage.getItem('authToken')
+      setIsAuthenticated(!!token) // !!token convierte el token en un booleano
+    }
+
+    checkToken()
 
     // Limpia el evento de scroll cuando el componente se desmonta
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   return (
     <Navbar
       className={`sticky inset-0 z-10 h-max max-w-full py-2 px-3 lg:px-8 lg:py-3 ${
-        isNavbarBlurred ? "blur-on-scroll" : ""
+        isNavbarBlurred ? 'blur-on-scroll' : ''
       }`}
     >
       <div className="flex items-center justify-between text-blue-gray-900">
@@ -235,16 +261,34 @@ export default function Example() {
         <div className="hidden lg:block">
           <NavList />
         </div>
-        <div className="hidden gap-2 lg:flex">
-          <Link href="/login">
-            <Button variant="text" size="sm" color="blue-gray" fullWidth>
-              Iniciar sesión
+        {isAuthenticated ? (
+          <div className="hidden gap-2 lg:flex">
+            <Button
+              variant="text"
+              size="sm"
+              color="blue-gray"
+              onClick={handleLogout}
+            >
+              <div className="inline-flex items-center">
+                <ArrowRightOnRectangleIcon className="h-6 w-6 mr-2" />
+                Cerrar sesión
+              </div>
             </Button>
-          </Link>
-          <Button className="bg-[#F6C38C]" size="sm">
-            Registrar
-          </Button>
-        </div>
+          </div>
+        ) : (
+          <div className="hidden gap-2 lg:flex">
+            <Link href="/login">
+              <Button variant="text" size="sm" color="blue-gray" fullWidth>
+                Iniciar sesión
+              </Button>
+            </Link>
+            <Link href="/register">
+              <Button className="bg-[#F6C38C]" size="sm">
+                Registrar
+              </Button>
+            </Link>
+          </div>
+        )}
         <IconButton
           variant="text"
           color="blue-gray"
@@ -272,5 +316,5 @@ export default function Example() {
         </div>
       </Collapse>
     </Navbar>
-  );
+  )
 }
