@@ -5,7 +5,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 body {
-  @apply bg-gray-100
+  background-color: #f7f7f7;
+  /* color de fondo para el modo claro */
+}
+
+body.dark {
+  background-color: #333;
+  /* color de fondo para el modo oscuro */
 }
 
 .activo {
