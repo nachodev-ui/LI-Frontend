@@ -1,16 +1,19 @@
 import { ThemeProvider } from '@material-tailwind/react'
 import { FiltersProvider } from '@/context/filters'
 import { CartProvider } from '@/context/cart'
+import { DarkProvider } from '@/context/darkMode'
 import '../styles/globals.css'
 
 const App = ({ Component, pageProps }) => {
   return (
     <ThemeProvider>
-      <FiltersProvider>
-        <CartProvider>
-          <Component {...pageProps} />
-        </CartProvider>
-      </FiltersProvider>
+      <DarkProvider>
+        <FiltersProvider>
+          <CartProvider>
+            <Component {...pageProps} />
+          </CartProvider>
+        </FiltersProvider>
+      </DarkProvider>
     </ThemeProvider>
   )
 }
