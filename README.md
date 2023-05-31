@@ -24,18 +24,29 @@ Abre [http://localhost:3000](http://localhost:3000) con tu navegador para ver el
 
 Página principal `pages/index.js`.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## ¿Qué contiene?
 
-## Learn More
+- [x] Next.js
+- [x] Tailwindcss
+- [x] React
+- [x] Javascript
 
-To learn more about Next.js, take a look at the following resources:
+## ¿Cómo contribuir?
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Crea un fork del repositorio
+2. Clona el repositorio
+3. Crea una rama con tu nombre
+4. Realiza los cambios
+5. Haz un push a tu rama
+6. Crea un pull request
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Aprende más
 
-## Deploy on Vercel
+Puedes aprender más en la [documentación de Next.js](https://nextjs.org/docs/getting-started).
+
+Para aprender React, revisa la [documentación de React](https://reactjs.org/).
+
+## Deploy en Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
