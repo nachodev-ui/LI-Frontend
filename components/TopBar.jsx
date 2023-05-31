@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import {
   Bars3CenterLeftIcon,
   ChevronDownIcon,
@@ -8,24 +8,66 @@ import { Menu, Transition } from '@headlessui/react'
 import Link from 'next/link'
 import { BellIcon, CheckIcon } from '@heroicons/react/24/outline'
 import { Popover } from '@headlessui/react'
+import { useDark } from '@/hooks/useDark'
+
+const colors = {
+  light: {
+    background: 'bg-gray-100',
+    text: 'text-gray-600',
+    border: 'border-green-500',
+    button: 'bg-green-700 hover:bg-green-900',
+    icon: 'text-green-700',
+    link: 'text-gray-600 hover:text-green-700',
+    location: 'text-gray-600',
+  },
+  dark: {
+    background: 'bg-[#333]',
+    profileBackground: 'bg-[#444]',
+    text: 'text-white',
+    border: 'border-blue-300',
+    button: 'bg-blue-300 hover:bg-blue-500',
+    icon: 'text-blue-200',
+    link: 'text-gray-400 hover:text-blue-500',
+    location: 'text-gray-300',
+  },
+}
 
 const TopBar = ({ showNav, setShowNav }) => {
+  const { darkMode } = useDark()
+  const [userData, setUserData] = useState({})
+
+  const color = darkMode ? colors.dark : colors.light
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem('user'))
+
+    if (data) {
+      setUserData(data)
+    }
+
+    return () => {
+      setUserData({})
+    }
+  }, [])
+
   return (
     <div
       className={`fixed w-full h-16 flex justify-between items-center transition-all duration-[400ms] ${
         showNav ? 'pl-56 ' : ''
-      }`}
+      } ${color.background}`}
     >
       <div className="pl-4 md:pl-16">
         <Bars3CenterLeftIcon
-          className="h-8 w-8 text-gray-700 cursor-pointer"
+          className={`h-8 w-8 cursor-pointer ${color.text}`}
           onClick={() => setShowNav(!showNav)}
         />
       </div>
 
       <div className="flex items-center pr-4 md:pr-16">
         <Popover className="relative">
-          <Popover.Button className="outline-none mr-5 md:mr-8 cursor-pointer text-gray-700">
+          <Popover.Button
+            className={`outline-none mr-5 md:mr-8 cursor-pointer ${color.text}`}
+          >
             <BellIcon className="h-6 w-6" />
           </Popover.Button>
           <Transition
@@ -74,10 +116,10 @@ const TopBar = ({ showNav, setShowNav }) => {
                   alt="imagen avatar perfil"
                 />
               </picture>
-              <span className="hidden md:block font-medium text-gray-700">
-                Usuario
+              <span className={`hidden md:block font-medium ${color.text}`}>
+                {userData.username}
               </span>
-              <ChevronDownIcon className="ml-2 h-4 w-4 text-gray-700" />
+              <ChevronDownIcon className={`ml-2 h-4 w-4 ${color.text}`} />
             </Menu.Button>
           </div>
           <Transition
