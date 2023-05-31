@@ -1,13 +1,16 @@
 import Footer from './Footer'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { TimePicker, DatePicker } from '@mui/x-date-pickers'
 import { TextField, TextareaAutosize } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { Toaster, toast } from 'sonner'
 import dayjs from 'dayjs'
 import 'dayjs/locale/es'
 import axios from 'axios'
+
+const API_URL_REQUEST = 'http://localhost:5000/api/requests'
 
 const Mantencion = () => {
   const [dateTime, setDateTime] = useState(null)
@@ -30,28 +33,62 @@ const Mantencion = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const response = await axios.post('http://localhost:5000/api/requests', {
-      correo: email,
-      comentarios: descripcion,
-      fecha_solicitud: dateTime,
-      id_user: userId,
-      estado: 'Pendiente',
-    })
-
-    if (response.status === 200 || response.status === 201) {
-      // TODO: Show success message
+    // Validación de los campos
+    if (!email.trim() || !descripcion.trim() || !dateTime || !userId) {
+      toast.error(
+        'Por favor, completa todos los campos antes de envíar la solicitud.',
+        {
+          position: 'bottom-right',
+          duration: 5000,
+          style: {
+            borderRadius: '8px',
+            background: '#fff',
+            color: '#333',
+          },
+        }
+      )
+      return
     }
 
-    console.log(response.data)
+    try {
+      const response = await axios.post(API_URL_REQUEST, {
+        correo: email,
+        comentarios: descripcion,
+        fecha_solicitud: dateTime,
+        id_user: userId,
+        estado: 'Pendiente',
+      })
+
+      if (!response.status === 200 || !response.status === 201) {
+        toast.error('Hubo un error al enviar la solicitud', {
+          position: 'bottom-right',
+          duration: 5000,
+        })
+      }
+
+      toast.success('Solicitud enviada correctamente', {
+        position: 'bottom-right',
+        duration: 5000,
+      })
+
+      setDateTime(null)
+      setEmail('')
+      setDescripcion('')
+    } catch (error) {
+      toast.error('Hubo un error al enviar la solicitud', {
+        position: 'bottom-right',
+        duration: 5000,
+      })
+    }
   }
 
   return (
     <div className="bg-[#ECECEA]">
       <section className="text-gray-600 body-font bg-[#ECECEA]">
         <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
-          <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+          <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col">
             <motion.h1
-              className="title-font sm:text-4xl text-3xl mb-4 font-bold text-gray-800"
+              className="title-font sm:text-4xl text-3xl font-bold text-gray-800 md:items-start md:text-left md:mb-0 items-center text-center"
               initial={{ opacity: 0, left: 500, scale: 0.5 }}
               whileInView={{ opacity: 1, left: 0, scale: 1 }}
               transition={{ duration: 0.5 }}
@@ -59,14 +96,14 @@ const Mantencion = () => {
               Servicio de Mantenciones
               <br className="hidden lg:inline-block" />
             </motion.h1>
-            <p className="mb-8 leading-relaxed mr-20">
+            <p className="mb-8 mt-4 leading-relaxed md:items-start md:text-left text-center">
               Bienvenid@ a la sección de mantenimiento, aquí podrás solicitar
               una mantención para tu libro favorito, solo debes llenar el
               formulario y nosotros nos encargaremos del resto.
             </p>
-            <div className="flex justify-center">
-              <button className="inline-flex text-white bg-[#C97A76] border-0 py-2 px-6 focus:outline-none hover:bg-[#ba666c] text-lg">
-                Mis solicitudes
+            <div className="flex justify-center lg:justify-start mb-8">
+              <button className="text-white bg-[#C97A76] border-0 py-2 px-6 focus:outline-none hover:bg-[#ba666c] hover:scale-110 hover:rounded-sm text-lg">
+                Ver mis solicitudes
               </button>
             </div>
           </div>
@@ -109,7 +146,7 @@ const Mantencion = () => {
         </div>
 
         <div className="flex items-center justify-center pb-6 md:py-0 md:w-1/2">
-          <form className="my-4">
+          <form className="my-4" onSubmit={handleSubmit}>
             <div className="flex flex-col p-1.5 overflow-hidden rounded-lg m-2">
               <LocalizationProvider
                 dateAdapter={AdapterDayjs}
@@ -119,6 +156,7 @@ const Mantencion = () => {
                   label="Correo electrónico"
                   className="mt-2 mb-2"
                   onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                 />
                 <DatePicker
                   className="mt-2 border-gray-200"
@@ -147,14 +185,16 @@ const Mantencion = () => {
                 </p>
               </LocalizationProvider>
               <TextareaAutosize
-                className="border border-gray-400 mt-8 py-4 rounded placeholder:font-bold placeholder:text-center"
+                className="text-center border border-gray-400 mt-8 py-4 rounded placeholder:text-center"
                 placeholder="Proporcione detalles sobre su solicitud de mantenimiento."
                 onChange={(e) => setDescripcion(e.target.value)}
+                value={descripcion}
               ></TextareaAutosize>
             </div>
+            <Toaster />
             <button
               className="w-full mt-2 py-3 font-bold text-sm tracking-wider text-gray-100 uppercase transition-colors duration-300 transform bg-[#C97A76] rounded-md hover:bg-[#e06f69] focus:bg-[#C97A76] focus:outline-none"
-              onClick={handleSubmit}
+              type="submit"
             >
               Envíar solicitud
             </button>
