@@ -28,7 +28,7 @@ const colors = {
 
 const SideBar = forwardRef(({ showNav }, ref) => {
   const router = useRouter()
-  const { darkMode } = useDark()
+  const { darkMode, toggleDarkMode } = useDark()
 
   const color = darkMode ? colors.dark : colors.light
 
@@ -66,6 +66,21 @@ const SideBar = forwardRef(({ showNav }, ref) => {
           </Link>
         </div>
       ))}
+      <div className="flex justify-center mt-48 mr-6">
+        {/* Moon emoji */}
+        <button onClick={toggleDarkMode}>
+          <span
+            className="text-3xl cursor-pointer transition-all duration-[300]"
+            role="img"
+            aria-label="moon"
+          >
+            🌙
+          </span>
+          <p className="text-gray-700 font-bold mt-2">
+            {darkMode ? 'Dark' : 'Light'} Mode
+          </p>
+        </button>
+      </div>
     </div>
   )
 })
