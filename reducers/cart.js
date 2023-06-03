@@ -20,6 +20,8 @@ const UPDATE_STATE_BY_ACTION = {
     const { id } = action.payload
     const productInCartIndex = state.findIndex((book) => book.id === id)
 
+    localStorage.removeItem('transactionCompleted')
+
     if (productInCartIndex >= 0) {
       return state.map((book, index) => {
         if (index !== productInCartIndex) {
