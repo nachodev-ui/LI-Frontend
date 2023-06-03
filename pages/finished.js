@@ -11,7 +11,8 @@ function finished() {
   const { cart } = useCart()
   const isUpdatingStock = useRef(false)
   const hasFetched = useRef(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const hasFetchedUserData = useRef(false)
+  const hasFetchedTransactionData = useRef(false)
 
   useEffect(() => {
     const authToken = localStorage.getItem('authToken')
@@ -48,10 +49,40 @@ function finished() {
     getFetchUserData()
   }, [])
 
-  // Obtener los datos de la transacción y guardarlos en la base de datos
+  // Obtener los datos del usuario
+  useEffect(() => {
+    const getFetchUserData = async () => {
+      if (typeof window !== 'undefined' && !hasFetchedUserData.current) {
+        try {
+          hasFetchedUserData.current = true
+
+          const user = JSON.parse(localStorage.getItem('user'))
+          const userId = user.id
+
+          const { data } = await axios.get(
+            `http://localhost:5000/api/users/${userId}`
+          )
+
+          setUserData(data.data)
+        } catch (error) {
+          console.log(error)
+        } finally {
+          hasFetchedUserData.current = false
+        }
+      }
+    }
+
+    getFetchUserData()
+  }, [])
+
   useEffect(() => {
     const fetchData = async () => {
+      // Revisar si ya se completó una transacción
+      const transactionCompleted = localStorage.getItem('transactionCompleted')
+      if (hasFetchedTransactionData.current || transactionCompleted) return
+
       try {
+        hasFetchedTransactionData.current = true
         const authToken = localStorage.getItem('authToken')
         const router = Router
 
@@ -74,21 +105,41 @@ function finished() {
           `http://localhost:5000/status/${token}`
         )
 
+        console.log('transactionData: ', transactionData) // log transactionData for debugging
+
         if (status === 200 || status === 201) {
           setTransactionData(transactionData)
-          await axios.post('http://localhost:5000/api/sale', {
-            estado_transaccion: transactionData.status,
-            monto: transactionData.amount,
-            id_sesion: transactionData.session_id,
-            fecha_transaccion: transactionData.transaction_date,
-          })
 
-          setIsLoading(false)
+          await axios
+            .post('http://localhost:5000/api/sale', {
+              id_cliente: userId,
+              id_envio: Math.floor(Math.random() * 1000),
+              estado_transaccion: transactionData.status,
+              estado_envio: 'En preparación',
+              monto: transactionData.amount,
+              id_sesion: transactionData.session_id,
+              fecha_transaccion: transactionData.transaction_date,
+            })
+            .catch((error) => {
+              console.log('Error in POST request: ', error)
+            })
+
+          // Marcar la transacción como completada
+          localStorage.setItem('transactionCompleted', 'true')
           localStorage.removeItem('cart')
         }
+
+        if (status === 400) {
+          console.log('Error 400: ', transactionData)
+        }
+
+        if (status === 404) {
+          console.log('Error 404: ', transactionData)
+        }
       } catch (error) {
-        console.log(error)
-        setIsLoading(false) // Actualizar isLoading a false en caso de error
+        console.log('Error in fetchData: ', error)
+      } finally {
+        hasFetchedTransactionData.current = false
       }
     }
 
