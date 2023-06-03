@@ -58,16 +58,12 @@ const LoginForm = () => {
 
           router.push('/')
         } else {
-          console.log('Error desconocido')
+          console.log('Error del servidor')
         }
       }
     } catch (error) {
       const { response } = error
-      console.log(response.data)
-
-      const { message } = response.data
-
-      setError(message)
+      setError(response.data)
       setIsErrorModalOpen(true)
     }
   }
