@@ -35,17 +35,22 @@ const Main = () => {
     fetchBooks()
   }, [])
 
+  // "popular" significa que tiene mucho stock.
+  const popularBooks = [...filteredBooks]
+    .sort((a, b) => b.stock - a.stock)
+    .slice(0, 5)
+
   return (
     <div className="mx-auto flex items-center flex-wrap pb-12">
-      <div className="w-full xl:px-20 px-4 container items-center justify-between mt-0 py-3 mx-auto">
-        <p className="font-bold text-gray-800 text-4xl mb-8">
-          Lo más destacado
+      <div className="w-full items-centerr mt-4 mx-auto">
+        <p className="font-bold text-gray-800 text-4xl mb-8 text-center">
+          Lo más destacado de la semana
         </p>
       </div>
 
       <div className="w-full mx-auto px-6">
         <div className="flex flex-wrap justify-center">
-          <Books books={filteredBooks} />
+          <Books books={popularBooks} />
         </div>
       </div>
     </div>
