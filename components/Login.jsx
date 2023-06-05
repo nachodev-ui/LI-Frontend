@@ -1,21 +1,20 @@
-import { motion } from "framer-motion";
-import Link from "next/link";
-import LoginForm from "./forms/LoginForm";
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import LoginForm from './forms/LoginForm'
 
 const Login = ({ toggleShowPassword }) => {
-
   const scaleVariants = {
     hidden: {
       opacity: 0,
-      scale: 0
+      scale: 0,
     },
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.6
-      }
-    }
+        duration: 0.6,
+      },
+    },
   }
 
   return (
@@ -80,6 +79,13 @@ const Login = ({ toggleShowPassword }) => {
               </button>
             </Link>
           </div>
+          <div className="mt-10 text-xs flex justify-center items-center">
+            <Link href="/">
+              <button className="py-2 px-6 rounded-xl hover:scale-110 duration-300 text-[#593535] font-bold">
+                Ir al inicio
+              </button>
+            </Link>
+          </div>
         </div>
 
         <div className="md:block hidden w-1/2">
@@ -87,7 +93,7 @@ const Login = ({ toggleShowPassword }) => {
         </div>
       </motion.div>
     </section>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
