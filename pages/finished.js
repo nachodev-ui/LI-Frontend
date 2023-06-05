@@ -75,6 +75,7 @@ function finished() {
     getFetchUserData()
   }, [])
 
+  // POST para crear la venta
   useEffect(() => {
     const fetchData = async () => {
       // Revisar si ya se completó una transacción
