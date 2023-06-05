@@ -21,7 +21,7 @@ const Shipping = () => {
       // Datos para la solicitud POST
       const data = {
         buy_order: Math.random().toString(10).slice(2),
-        session_id: token.slice(0, 10),
+        session_id: 'session' + Math.random().toString(10).slice(2),
         amount: total,
         return_url: 'http://localhost:3000/finished',
       }
@@ -113,10 +113,10 @@ const Shipping = () => {
             name="billing-state"
             className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
           >
-            <option value="State">Ciudad</option>
-            <option value="State">Santiago</option>
-            <option value="State">Valparaíso</option>
-            <option value="State">Concepción</option>
+            <option value="0">Selecciona una ciudad</option>
+            <option value="1">Santiago</option>
+            <option value="2">Valparaíso</option>
+            <option value="3">Concepción</option>
           </select>
         </div>
 
