@@ -1,4 +1,5 @@
 import { Typography } from '@material-tailwind/react'
+import { useDark } from '@/hooks/useDark'
 import Link from 'next/link'
 
 const links = [
@@ -27,12 +28,36 @@ const links = [
 ]
 const currentYear = new Date().getFullYear()
 
+const colors = {
+  light: {
+    background: 'bg-[#f7f7f7]',
+    text: 'text-gray-800',
+    border: 'border-green-500',
+    button: 'bg-green-700 hover:bg-green-900',
+    icon: 'text-green-700',
+    link: 'text-gray-600 hover:text-green-700',
+    location: 'text-gray-600',
+  },
+  dark: {
+    background: 'bg-gray-900',
+    text: 'text-white',
+    border: 'border-blue-300',
+    button: 'bg-blue-300 hover:bg-blue-500',
+    icon: 'text-blue-200',
+    link: 'text-gray-400',
+    location: 'text-gray-300',
+  },
+}
+
 const Footer = () => {
+  const { darkMode } = useDark()
+  const color = darkMode ? colors.dark : colors.light
+
   return (
-    <footer className="relative w-full mt-24">
+    <footer className={`relative w-full mt-24 ${color.background} pt-8 p-4`}>
       <div className="mx-auto w-full max-w-7xl px-8">
         <div className="grid grid-cols-1 justify-between gap-4 md:grid-cols-2">
-          <Typography variant="h5" className="mb-6">
+          <Typography variant="h5" className={`mb-6 ${color.text}`}>
             Librería Imagina
           </Typography>
           <div className="grid grid-cols-3 justify-between gap-4">
@@ -40,8 +65,7 @@ const Footer = () => {
               <ul key={title}>
                 <Typography
                   variant="small"
-                  color="blue-gray"
-                  className="mb-3 font-medium opacity-40"
+                  className={`mb-3 font-medium opacity-40 ${color.text}`}
                 >
                   <Link href={href}>{title}</Link>
                 </Typography>
@@ -51,7 +75,8 @@ const Footer = () => {
                       as="a"
                       href={link.href}
                       color="gray"
-                      className="py-1.5 font-normal transition-colors hover:text-blue-gray-900"
+                      className={`py-1.5 font-normal transition-colors duration-200 block
+                      ${color.link} hover:${color.icon}`}
                     >
                       {link.name}
                     </Typography>
@@ -64,13 +89,13 @@ const Footer = () => {
         <div className="mt-12 flex w-full flex-col items-center justify-center border-t border-blue-gray-50 py-4 md:flex-row md:justify-between">
           <Typography
             variant="small"
-            className="mb-4 text-center font-normal text-blue-gray-900 md:mb-0"
+            className={`mb-4 text-center font-normal  md:mb-0 ${color.text}`}
           >
             &copy; {currentYear}{' '}
             <a href="https://material-tailwind.com/">TESS Solutions</a>. Todos
             los derechos reservados.
           </Typography>
-          <div className="flex gap-4 text-blue-gray-900 sm:justify-center">
+          <div className={`flex gap-4  sm:justify-center ${color.icon}`}>
             <Typography
               as="a"
               href="#"
