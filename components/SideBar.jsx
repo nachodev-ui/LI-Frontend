@@ -35,7 +35,9 @@ const SideBar = forwardRef(({ showNav }, ref) => {
   return (
     <div
       ref={ref}
-      className={`fixed w-60 h-full shadow-sm ${color.background}`}
+      className={`absolute w-60 h-full shadow-sm ${color.background} ${
+        showNav ? 'translate-x-0' : '-translate-x-full'
+      }`}
     >
       <div className="flex justify-center mt-6 mb-14">
         <picture>
@@ -67,7 +69,6 @@ const SideBar = forwardRef(({ showNav }, ref) => {
         </div>
       ))}
       <div className="flex justify-center mt-48 mr-6">
-        {/* Moon emoji */}
         <button onClick={toggleDarkMode}>
           <span
             className="text-3xl cursor-pointer transition-all duration-[300]"
