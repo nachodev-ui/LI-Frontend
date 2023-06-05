@@ -74,8 +74,7 @@ const MantencionesList = () => {
   }
 
   return (
-    <div>
-      {/* Maintenances presentation with Image */}
+    <div className={`${color.background}`}>
       <motion.section
         className={`body-font shadow-md ${color.background}`}
         variants={variants}
@@ -116,7 +115,7 @@ const MantencionesList = () => {
                   Solicitudes de Mantención
                 </span>
               </h1>
-              <div className="overflow-hidden  sm:rounded-lg mb-24 p-24">
+              <div className="overflow-hidden  sm:rounded-lg mb-24 pt-14">
                 {mantenciones.length > 0 ? (
                   <table className="min-w-full p-12 divide-y divide-gray-300">
                     <thead className="bg-gray-50">
