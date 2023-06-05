@@ -35,13 +35,6 @@ const Books = ({ books }) => {
     setActive(pageNumber)
   }
 
-  const getItemProps = (index) => ({
-    variant: active === index ? 'filled' : 'text',
-    color: active === index ? 'blue' : 'blue-gray',
-    onClick: () => setActive(index),
-    className: 'rounded-full',
-  })
-
   const next = () => {
     if (active === 5) return
 
@@ -87,7 +80,7 @@ const Books = ({ books }) => {
     <div>
       <div className="grid xl:grid-cols-5 lg:grid-cols-2 md:grid-cols-3 sm:grid-cols-2 mt-12 justify-center">
         {pagedBooks.map((book) => (
-          <div className="px-8 my-12" key={book.id}>
+          <div className="px-8 my-12" key={book.isbn}>
             <Card className="w-60 h-90 bg-[#f8f8f8]">
               <CardHeader shadow={true} floated={true} className="rounded-sm">
                 <div
