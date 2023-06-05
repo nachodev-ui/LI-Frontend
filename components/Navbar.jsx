@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Navbar,
   Collapse,
@@ -24,11 +24,15 @@ import {
   RocketLaunchIcon,
   BookOpenIcon,
   ShoppingBagIcon,
+  WrenchIcon,
+  UserGroupIcon,
 } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Toaster, toast } from 'sonner'
 import {} from '../styles/Navbar.module.css'
+import axios from 'axios'
+import { el, hr } from 'date-fns/locale'
 
 const colors = {
   blue: 'bg-blue-50 text-blue-500',
@@ -108,89 +112,203 @@ function NavListMenu() {
   )
 
   return (
-    <React.Fragment>
-      <Menu
-        open={isMenuOpen}
-        handler={setIsMenuOpen}
-        offset={{ mainAxis: 20 }}
-        placement="bottom"
-        allowHover={true}
-      >
-        <MenuHandler>
-          <Typography as="div" variant="small" className="font-normal">
-            <ListItem
-              className="flex items-center gap-2 py-2 pr-4"
-              selected={isMenuOpen || isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen((cur) => !cur)}
-            >
-              <Square3Stack3DIcon className="h-[18px] w-[18px]" />
-              Servicios
-              <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`hidden h-3 w-3 transition-transform lg:block ${
-                  isMenuOpen ? 'rotate-180' : ''
-                }`}
-              />
-              <ChevronDownIcon
-                strokeWidth={2.5}
-                className={`block h-3 w-3 transition-transform lg:hidden ${
-                  isMobileMenuOpen ? 'rotate-180' : ''
-                }`}
-              />
-            </ListItem>
-          </Typography>
-        </MenuHandler>
-        <MenuList className="hidden max-w-screen-xl rounded-xl lg:block">
-          <ul className="grid grid-cols-4 gap-y-2">{renderItems}</ul>
-        </MenuList>
-      </Menu>
-      <div className="block lg:hidden">
-        <Collapse open={isMobileMenuOpen}>{renderItems}</Collapse>
-      </div>
-    </React.Fragment>
+    <>
+      <React.Fragment>
+        <Menu
+          open={isMenuOpen}
+          handler={setIsMenuOpen}
+          offset={{ mainAxis: 20 }}
+          placement="bottom"
+          allowHover={true}
+        >
+          <MenuHandler>
+            <Typography as="div" variant="small" className="font-normal">
+              <ListItem
+                className="flex items-center gap-2 py-2 pr-4"
+                selected={isMenuOpen || isMobileMenuOpen}
+                onClick={() => setIsMobileMenuOpen((cur) => !cur)}
+              >
+                <Square3Stack3DIcon className="h-[18px] w-[18px]" />
+                Servicios
+                <ChevronDownIcon
+                  strokeWidth={2.5}
+                  className={`hidden h-3 w-3 transition-transform lg:block ${
+                    isMenuOpen ? 'rotate-180' : ''
+                  }`}
+                />
+                <ChevronDownIcon
+                  strokeWidth={2.5}
+                  className={`block h-3 w-3 transition-transform lg:hidden ${
+                    isMobileMenuOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </ListItem>
+            </Typography>
+          </MenuHandler>
+          <MenuList className="hidden max-w-screen-xl rounded-xl lg:block">
+            <ul className="grid grid-cols-4 gap-y-2">{renderItems}</ul>
+          </MenuList>
+        </Menu>
+        <div className="block lg:hidden">
+          <Collapse open={isMobileMenuOpen}>{renderItems}</Collapse>
+        </div>
+      </React.Fragment>
+    </>
   )
 }
 
+const navListItemUser = [
+  {
+    icon: <BookOpenIcon className="h-[18px] w-[18px]" />,
+    title: 'Libros',
+    href: '/libros',
+  },
+  {
+    icon: <ShoppingBagIcon className="h-[18px] w-[18px]" />,
+    title: 'Mi carro',
+    href: '/compras',
+  },
+]
+
+const navListItemAdmin = [
+  {
+    icon: <WrenchIcon className="h-[18px] w-[18px]" />,
+    title: 'Gestionar mantenciones',
+    href: '/mantenciones',
+  },
+  {
+    icon: <UserGroupIcon className="h-[18px] w-[18px]" />,
+    title: 'Gestionar usuarios',
+    href: '/users',
+  },
+  {
+    icon: <BookOpenIcon className="h-[18px] w-[18px]" />,
+    title: 'Gestionar libros',
+    href: '/libros',
+  },
+  {
+    icon: <ShoppingBagIcon className="h-[18px] w-[18px]" />,
+    title: 'Gestionar compras',
+    href: '/compras',
+  },
+]
+
+const navListItemTechnician = [
+  {
+    icon: <WrenchIcon className="h-[18px] w-[18px]" />,
+    title: 'Mantenciones',
+    href: '/mantenciones',
+  },
+]
+
 function NavList() {
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false)
+  const [isTechnician, setIsTechnician] = React.useState(false)
+  const [isAdmin, setIsAdmin] = React.useState(false)
+  const [isCliente, setIsCliente] = React.useState(false)
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    const userType = user?.tipo_usuario
+
+    if (userType === 'Técnico') {
+      setIsTechnician(true)
+    } else if (userType === 'Administrador') {
+      setIsAdmin(true)
+    } else if (userType === 'Cliente') {
+      setIsCliente(true)
+    }
+
+    setIsAuthenticated(!!user)
+    console.log(isTechnician)
+    console.log(isAdmin)
+    console.log(isCliente)
+  }, [])
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = localStorage.getItem('authToken')
+      setIsAuthenticated(!!token) // !!token convierte el token en un booleano
+    }
+
+    checkToken()
+  }, [])
+
   return (
     <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
-      <Typography
-        as="a"
-        href="/libros"
-        variant="small"
-        color="blue-gray"
-        className="font-normal"
-      >
-        <ListItem className="flex items-center gap-2 py-2 pr-4">
-          <BookOpenIcon className="h-[18px] w-[18px]" />
-          Libros
-        </ListItem>
-      </Typography>
-      <NavListMenu />
-      <Typography
-        as="a"
-        href="/cart"
-        variant="small"
-        color="blue-gray"
-        className="font-normal"
-      >
-        <ListItem className="flex items-center gap-2 py-2 pr-4">
-          <ShoppingBagIcon className="h-[18px] w-[18px]" />
-          Mi carro
-        </ListItem>
-      </Typography>
-      <Typography
-        as="a"
-        href="/perfil"
-        variant="small"
-        color="blue-gray"
-        className="font-normal"
-      >
-        <ListItem className="flex items-center gap-2 py-2 pr-4">
-          <UserCircleIcon className="h-[18px] w-[18px]" />
-          Cuenta
-        </ListItem>
-      </Typography>
+      {isAdmin && (
+        <>
+          {navListItemAdmin.map((adminHead) => (
+            <Typography
+              as="a"
+              key={adminHead.href}
+              href={adminHead.href}
+              variant="small"
+              color="blue-gray"
+              className="font-normal"
+            >
+              <ListItem className="flex items-center gap-2 py-2 pr-4">
+                {adminHead.icon}
+                {adminHead.title}
+              </ListItem>
+            </Typography>
+          ))}
+        </>
+      )}
+
+      {isTechnician && (
+        <>
+          {navListItemTechnician.map((technicianHead) => (
+            <Typography
+              as="a"
+              key={technicianHead.href}
+              href={technicianHead.href}
+              variant="small"
+              color="blue-gray"
+              className="font-normal"
+            >
+              <ListItem className="flex items-center gap-2 py-2 pr-4">
+                {technicianHead.icon}
+                {technicianHead.title}
+              </ListItem>
+            </Typography>
+          ))}
+        </>
+      )}
+      {isCliente && (
+        <>
+          {navListItemUser.map((userHead) => (
+            <Typography
+              as="a"
+              key={userHead.href}
+              href={userHead.href}
+              variant="small"
+              color="blue-gray"
+              className="font-normal"
+            >
+              <ListItem className="flex items-center gap-2 py-2 pr-4">
+                {userHead.icon}
+                {userHead.title}
+              </ListItem>
+            </Typography>
+          ))}
+          <NavListMenu />
+        </>
+      )}
+      {isAuthenticated && (
+        <Typography
+          as="a"
+          href="/"
+          variant="small"
+          color="blue-gray"
+          className="font-normal"
+        >
+          <ListItem className="flex items-center gap-2 py-2 pr-4">
+            <UserCircleIcon className="h-[18px] w-[18px]" />
+            Mi perfil
+          </ListItem>
+        </Typography>
+      )}
     </List>
   )
 }
@@ -231,7 +349,7 @@ export default function Example() {
     window.addEventListener('scroll', handleScroll)
 
     const checkToken = async () => {
-      const token = await localStorage.getItem('authToken')
+      const token = localStorage.getItem('authToken')
       setIsAuthenticated(!!token) // !!token convierte el token en un booleano
     }
 
@@ -304,15 +422,33 @@ export default function Example() {
       </div>
       <Collapse open={openNav}>
         <NavList />
-        <div className="flex w-full flex-nowrap items-center gap-2 lg:hidden">
-          <Link href="/login" className="w-full">
-            <Button variant="outlined" size="sm" color="blue-gray" fullWidth>
-              Iniciar
+        <div className="flex w-full flex-nowrap items-between gap-2 lg:hidden">
+          {isAuthenticated ? (
+            <Button
+              variant="text"
+              size="sm"
+              color="blue-gray"
+              onClick={handleLogout}
+            >
+              <div className="inline-flex items-center justify-center">
+                <ArrowRightOnRectangleIcon className="h-6 w-6 mr-2" />
+                Cerrar sesión
+              </div>
             </Button>
-          </Link>
-          <Button variant="gradient" size="sm" fullWidth>
-            Registrar
-          </Button>
+          ) : (
+            <div className="flex w-full justify-between items-center px-24 lg:hidden">
+              <Link href="/login">
+                <Button variant="text" size="sm" color="blue-gray">
+                  Iniciar sesión
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button className="bg-[#F6C38C]" size="sm">
+                  Registrar
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
       </Collapse>
     </Navbar>
