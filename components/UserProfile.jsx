@@ -28,7 +28,7 @@ const colors = {
 const URL_API_GET_USER = 'http://localhost:5000/api/users'
 
 const UserProfile = () => {
-  const { darkMode, toggleDarkMode } = useDark()
+  const { darkMode } = useDark()
   const [userData, setUserData] = useState({})
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -77,8 +77,6 @@ const UserProfile = () => {
             alt="avatar"
             className="rounded-full h-auto w-full overflow-hidden shadow lg:hidden p-12"
           />
-
-          {/*Add Pencil icon in top right to edit user*/}
           <div className="inline-flex">
             <h1 className={`text-3xl font-bold pt-8 lg:pt-0 ${color.text}`}>
               {userData.username}
@@ -131,7 +129,6 @@ const UserProfile = () => {
           <p
             className={`pt-4 text-xs lg:text-sm flex items-center justify-center lg:justify-start ${color.text}`}
           >
-            {/* MAP SVG */}
             <svg
               className={`h-4 fill-current pr-4 ${color.icon}`}
               xmlns="http://www.w3.org/2000/svg"
@@ -172,7 +169,6 @@ const UserProfile = () => {
           <p
             className={`pt-4 text-xs lg:text-sm flex items-center justify-center lg:justify-start ${color.text}`}
           >
-            {/* PHONE SVG */}
             <svg
               className={`h-4 fill-current pr-4 ${color.icon}`}
               xmlns="http://www.w3.org/2000/svg"
