@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 
 const EditUser = ({ isOpen, onClose, userData, onUpdateUserData }) => {
   const [loading, setLoading] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(null)
   const [formValues, setFormValues] = useState({
     username: '',
     telefono: '',
@@ -17,6 +18,7 @@ const EditUser = ({ isOpen, onClose, userData, onUpdateUserData }) => {
         telefono: userData.telefono || '',
         ciudad: userData.ciudad || '',
         direccion: userData.direccion || '',
+        imagen: userData.imagen || '',
       })
     }
   }, [isOpen, userData])
@@ -28,6 +30,10 @@ const EditUser = ({ isOpen, onClose, userData, onUpdateUserData }) => {
       ...formValues,
       [event.target.id]: event.target.value,
     })
+  }
+
+  const handleImageChange = (e) => {
+    setSelectedImage(e.target.files[0])
   }
 
   const handleSubmit = async () => {
@@ -55,6 +61,7 @@ const EditUser = ({ isOpen, onClose, userData, onUpdateUserData }) => {
         telefono: telefono || '',
         ciudad: ciudad || '',
         direccion: direccion || '',
+        imagen: imagen || '',
       })
     } catch (error) {
       console.log(error)
@@ -228,7 +235,11 @@ const EditUser = ({ isOpen, onClose, userData, onUpdateUserData }) => {
                       from your computer
                     </p>
                   </div>
-                  <input type="file" className="hidden" />
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
                 </label>
               </div>
             </div>
