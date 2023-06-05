@@ -1,4 +1,5 @@
 import Footer from './Footer'
+import Ceo from './Ceo'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -55,21 +56,21 @@ const Mantencion = () => {
         correo: email,
         comentarios: descripcion,
         fecha_solicitud: dateTime,
-        id_user: userId,
         estado: 'Pendiente',
+        user_id: userId,
       })
 
-      if (!response.status === 200 || !response.status === 201) {
+      if (response.status === 200 || response.status === 201) {
+        toast.success('Solicitud enviada correctamente', {
+          position: 'bottom-right',
+          duration: 5000,
+        })
+      } else {
         toast.error('Hubo un error al enviar la solicitud', {
           position: 'bottom-right',
           duration: 5000,
         })
       }
-
-      toast.success('Solicitud enviada correctamente', {
-        position: 'bottom-right',
-        duration: 5000,
-      })
 
       setDateTime(null)
       setEmail('')
@@ -84,6 +85,8 @@ const Mantencion = () => {
 
   return (
     <div className="bg-[#ECECEA]">
+      <Ceo page="Mantención" />
+
       <section className="text-gray-600 body-font bg-[#ECECEA]">
         <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
           <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col">
