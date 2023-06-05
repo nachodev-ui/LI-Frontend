@@ -14,18 +14,17 @@ const colors = {
 }
 
 const ProfileLayout = ({ children }) => {
-  const [showNav, setShowNav] = useState(true)
+  const [showNav, setShowNav] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const { darkMode } = useDark()
 
   const color = darkMode ? colors.dark : colors.light
 
   const handleResize = () => {
-    if (innerWidth <= 640) {
+    if (window.innerWidth <= 640) {
       setShowNav(false)
       setIsMobile(true)
     } else {
-      setShowNav(true)
       setIsMobile(false)
     }
   }
@@ -47,7 +46,8 @@ const ProfileLayout = ({ children }) => {
       <Transition
         as={Fragment}
         show={showNav}
-        enter="transform transtition duration-[400ms]"
+        enter="transform transition duration-[400ms]"
+        enterFrom="-translate-x-full"
         enterTo="translate-x-0"
         leave="transform duration-[400ms] transition ease-in-out"
         leaveFrom="translate-x-0"
