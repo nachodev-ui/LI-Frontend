@@ -166,7 +166,7 @@ const navListItemUser = [
   {
     icon: <ShoppingBagIcon className="h-[18px] w-[18px]" />,
     title: 'Mi carro',
-    href: '/compras',
+    href: '/cart',
   },
 ]
 
@@ -174,12 +174,12 @@ const navListItemAdmin = [
   {
     icon: <WrenchIcon className="h-[18px] w-[18px]" />,
     title: 'Gestionar mantenciones',
-    href: '/mantenciones',
+    href: '/admin/maintenance',
   },
   {
     icon: <UserGroupIcon className="h-[18px] w-[18px]" />,
     title: 'Gestionar usuarios',
-    href: '/users',
+    href: '/admin/users',
   },
   {
     icon: <BookOpenIcon className="h-[18px] w-[18px]" />,
