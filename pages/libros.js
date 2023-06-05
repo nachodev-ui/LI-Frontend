@@ -25,9 +25,7 @@ const Libros = () => {
         <Filters />
       </section>
 
-      <section className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 mt-12 justify-center">
-        <Books books={filteredBooks} />
-      </section>
+      <Books books={filteredBooks} />
 
       <Footer />
     </div>
