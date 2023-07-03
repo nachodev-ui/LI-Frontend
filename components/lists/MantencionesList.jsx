@@ -115,7 +115,7 @@ const MantencionesList = () => {
                   Solicitudes de Mantención
                 </span>
               </h1>
-              <div className="overflow-hidden  sm:rounded-lg mb-24 pt-14">
+              <div className="overflow-hidden  sm:rounded-lg mb-40 pt-8">
                 {mantenciones.length > 0 ? (
                   <table className="min-w-full p-12 divide-y divide-gray-300">
                     <thead className="bg-gray-50">
