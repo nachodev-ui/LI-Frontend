@@ -2,12 +2,21 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Footer from '../Footer'
 import { formatDate } from '@/utils/dateUtils'
-import { CheckIcon } from '@heroicons/react/24/outline'
+import { CheckIcon, WrenchIcon } from '@heroicons/react/24/outline'
 
 const URL_API_MAINTENANCE = 'http://localhost:5000/api/requests'
 
 const AdminMaintenance = () => {
   const [maintenanceTech, setMaintenanceTech] = useState([])
+  const [adminId, setAdminId] = useState('')
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    const userId = user.id
+
+    console.log(userId)
+    setAdminId(userId)
+  }, [])
 
   const fetchMaintenanceData = () => {
     axios
@@ -24,6 +33,35 @@ const AdminMaintenance = () => {
   useEffect(() => {
     fetchMaintenanceData()
   }, [])
+
+  const handleUpdateState = (id) => {
+    axios
+      .put(`${URL_API_MAINTENANCE}/${id}`, {
+        id_tecnico: adminId,
+        estado: 'En proceso',
+      })
+      .then((res) => {
+        fetchMaintenanceData()
+        console.log(res.data.message)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  const handleFinishMaintenance = (id) => {
+    axios
+      .put(`${URL_API_MAINTENANCE}/${id}`, {
+        estado: 'Finalizada',
+      })
+      .then((res) => {
+        fetchMaintenanceData()
+        console.log(res.data.message)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
   return (
     <div>
