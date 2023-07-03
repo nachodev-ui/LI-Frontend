@@ -4,15 +4,34 @@ import axios from 'axios'
 import queryString from 'query-string'
 import Router from 'next/router'
 import Example from '@/components/Navbar'
+import Footer from '@/components/Footer'
 
 function finished() {
   const [transactionData, setTransactionData] = useState({})
   const [userData, setUserData] = useState({})
+  const [shippingData, setShippingData] = useState({})
   const { cart } = useCart()
   const isUpdatingStock = useRef(false)
   const hasFetched = useRef(false)
   const hasFetchedUserData = useRef(false)
   const hasFetchedTransactionData = useRef(false)
+
+  const shippingPost = async (shipping) => {
+    setShippingData(shipping)
+
+    console.log('shipping: ', shipping)
+
+    try {
+      const { data } = await axios.post(
+        'http://localhost:9001/api/envios',
+        shipping
+      )
+      console.log('shippingData: ', shippingData)
+      console.log('data: ', data)
+    } catch (error) {
+      console.log('Error in shippingPost: ', error)
+    }
+  }
 
   useEffect(() => {
     const authToken = localStorage.getItem('authToken')
@@ -111,23 +130,38 @@ function finished() {
         if (status === 200 || status === 201) {
           setTransactionData(transactionData)
 
-          await axios
-            .post('http://localhost:5000/api/sale', {
+          const shipping = {
+            id_envio: Math.floor(Math.random() * 100),
+            fecha: new Date(),
+            destino: localStorage.getItem('direccion'),
+            ciudad: localStorage.getItem('ciudad'),
+            estado_envio: 'En preparación',
+            id_usuario: userId,
+            valor: 3000,
+          }
+
+          try {
+            await axios.post('http://localhost:5000/api/sale', {
               id_cliente: userId,
-              id_envio: Math.floor(Math.random() * 1000),
+              id_envio: shipping.id_envio,
               estado_transaccion: transactionData.status,
-              estado_envio: 'En preparación',
+              estado_envio: shipping.estado_envio,
               monto: transactionData.amount,
               id_sesion: transactionData.session_id,
               fecha_transaccion: transactionData.transaction_date,
             })
-            .catch((error) => {
-              console.log('Error in POST request: ', error)
-            })
 
-          // Marcar la transacción como completada
-          localStorage.setItem('transactionCompleted', 'true')
-          localStorage.removeItem('cart')
+            await shippingPost(shipping)
+
+            localStorage.removeItem('direccion') // borrar la dirección del almacenamiento local
+            localStorage.removeItem('ciudad') // borrar la ciudad del almacenamiento
+
+            // Marcar la transacción como completada
+            localStorage.setItem('transactionCompleted', 'true')
+            localStorage.removeItem('cart')
+          } catch (error) {
+            console.log('Error in POST request: ', error)
+          }
         }
 
         if (status === 400) {
@@ -257,7 +291,7 @@ function finished() {
                           Tu dirección
                         </label>
                         <p className="text-gray-700 text-base">
-                          {userData.direccion}
+                          {userData.direccion ? userData.direccion : 'N/A'}
                         </p>
                       </div>
                       <div className="mb-4">
@@ -276,6 +310,7 @@ function finished() {
           </div>
         </section>
       )}
+      <Footer />
     </div>
   )
 }
