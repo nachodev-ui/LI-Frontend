@@ -1,3 +1,5 @@
+// Crear la transacción
+
 import {
   calculateIVA,
   calculateSubTotal,
@@ -10,6 +12,7 @@ import axios from 'axios'
 const Shipping = () => {
   const { cart } = useCart()
   const [transactionData, setTransactionData] = useState({})
+  const [shippingData, setShippingData] = useState({})
   const [token, setToken] = useState('')
 
   useEffect(() => {
@@ -27,7 +30,11 @@ const Shipping = () => {
       }
 
       // Realizando la solicitud POST para crear la transacción
-      const response = await axios.post('http://localhost:5000/create', data)
+      const response = await axios
+        .post('http://localhost:5000/create', data)
+        .catch((error) => {
+          console.error('Error creating transaction:', error)
+        })
 
       setTransactionData(response.data)
 
@@ -56,35 +63,6 @@ const Shipping = () => {
         Completa tu información y revisa tu orden.
       </p>
       <div className="font-bold">
-        <label htmlFor="email" className="mt-4 mb-2 block text-sm font-medium">
-          Email
-        </label>
-        <div className="relative">
-          <input
-            type="text"
-            id="email"
-            name="email"
-            className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-            placeholder="your.email@gmail.com"
-          />
-          <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-              />
-            </svg>
-          </div>
-        </div>
-
         <label
           htmlFor="billing-address"
           className="mt-4 mb-2 block text-sm font-medium"
@@ -99,6 +77,11 @@ const Shipping = () => {
               name="billing-address"
               className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
               placeholder="Dirección"
+              onChange={(e) => {
+                setShippingData({ ...shippingData, direccion: e.target.value })
+                localStorage.setItem('direccion', e.target.value)
+              }}
+              value={localStorage.getItem('direccion')}
             />
             <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
               <img
@@ -112,11 +95,23 @@ const Shipping = () => {
             type="text"
             name="billing-state"
             className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Ciudad"
+            onChange={(e) => {
+              setShippingData({ ...shippingData, ciudad: e.target.value })
+              localStorage.setItem('ciudad', e.target.value)
+            }}
+            value={localStorage.getItem('ciudad')}
           >
-            <option value="0">Selecciona una ciudad</option>
-            <option value="1">Santiago</option>
-            <option value="2">Valparaíso</option>
-            <option value="3">Concepción</option>
+            <option value="">Selecciona una región</option>
+            <option value="Coquimbo">Coquimbo</option>
+            <option value="Valparaíso">Valparaíso</option>
+            <option value="Metropolitana de Santiago">
+              Metropolitana de Santiago
+            </option>
+            <option value="Libertador General Bernardo O'Higgins">
+              Libertador General Bernardo O'Higgins
+            </option>
+            <option value="Maule">Maule</option>
           </select>
         </div>
 
@@ -137,12 +132,21 @@ const Shipping = () => {
           </p>
         </div>
       </div>
-      <button
-        className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
-        onClick={handleBuy}
-      >
-        Realizar pago
-      </button>
+      {cart.length > 0 ? (
+        <button
+          className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
+          onClick={handleBuy}
+        >
+          Realizar pago
+        </button>
+      ) : (
+        <button
+          className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
+          disabled
+        >
+          Realizar pago
+        </button>
+      )}
     </div>
   )
 }
