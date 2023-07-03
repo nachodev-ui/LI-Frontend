@@ -21,9 +21,21 @@ const Books = ({ books }) => {
   const currentPage = router.pathname
   const { addToCart } = useCart()
   const [active, setActive] = useState(1)
+  const [userType, setUserType] = useState('')
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   const totalPages = Math.ceil(books.length / ITEMS_PER_PAGE)
   const [pagedBooks, setPagedBooks] = useState(books.slice(0, ITEMS_PER_PAGE))
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    const userType = user?.tipo_usuario
+
+    if (userType === 'Cliente') {
+      setUserType('Cliente')
+      setIsAuthenticated(true)
+    }
+  }, [])
 
   useEffect(() => {
     setPagedBooks(
@@ -116,7 +128,7 @@ const Books = ({ books }) => {
               </CardBody>
               <CardFooter className="pt-0">
                 <Toaster />
-                {book.stock > 0 ? (
+                {(userType === 'Cliente' || !userType) && book.stock > 0 ? (
                   <Button
                     fullWidth={true}
                     className="bg-[#313131] shadow-none hover:shadow-none hover:scale-105 focus:shadow-none focus:scale-105 active:scale-100"
