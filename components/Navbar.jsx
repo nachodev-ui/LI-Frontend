@@ -69,7 +69,7 @@ const navListMenuItems = [
       </div>
     ),
     description: 'Ofrecemos despacho y seguimiento de tu compra.',
-    href: '/delivery',
+    href: '/tracking',
   },
   {
     color: 'purple',
@@ -184,12 +184,12 @@ const navListItemAdmin = [
   {
     icon: <BookOpenIcon className="h-[18px] w-[18px]" />,
     title: 'Gestionar libros',
-    href: '/libros',
+    href: '/admin/books',
   },
   {
     icon: <ShoppingBagIcon className="h-[18px] w-[18px]" />,
     title: 'Gestionar compras',
-    href: '/compras',
+    href: '/admin/sales',
   },
 ]
 
@@ -220,9 +220,6 @@ function NavList() {
     }
 
     setIsAuthenticated(!!user)
-    console.log(isTechnician)
-    console.log(isAdmin)
-    console.log(isCliente)
   }, [])
 
   useEffect(() => {
@@ -275,7 +272,7 @@ function NavList() {
           ))}
         </>
       )}
-      {isCliente && (
+      {isCliente && !isAdmin && !isTechnician && (
         <>
           {navListItemUser.map((userHead) => (
             <Typography
@@ -293,21 +290,38 @@ function NavList() {
             </Typography>
           ))}
           <NavListMenu />
+          <Typography
+            as="a"
+            href="/perfil"
+            variant="small"
+            color="blue-gray"
+            className="font-normal"
+          >
+            <ListItem className="flex items-center gap-2 py-2 pr-4">
+              <UserCircleIcon className="h-[18px] w-[18px]" />
+              Mi perfil
+            </ListItem>
+          </Typography>
         </>
       )}
-      {isAuthenticated && (
-        <Typography
-          as="a"
-          href="/"
-          variant="small"
-          color="blue-gray"
-          className="font-normal"
-        >
-          <ListItem className="flex items-center gap-2 py-2 pr-4">
-            <UserCircleIcon className="h-[18px] w-[18px]" />
-            Mi perfil
-          </ListItem>
-        </Typography>
+      {!isAuthenticated && (
+        <>
+          {navListItemUser.map((userHead) => (
+            <Typography
+              as="a"
+              key={userHead.href}
+              href={userHead.href}
+              variant="small"
+              color="blue-gray"
+              className="font-normal"
+            >
+              <ListItem className="flex items-center gap-2 py-2 pr-4">
+                {userHead.icon}
+                {userHead.title}
+              </ListItem>
+            </Typography>
+          ))}
+        </>
       )}
     </List>
   )
