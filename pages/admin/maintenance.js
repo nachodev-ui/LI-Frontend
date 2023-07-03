@@ -1,21 +1,9 @@
 import AdminMaintenance from '@/components/admin/AdminMaintenance'
 import Ceo from '@/components/Ceo'
 import Example from '@/components/Navbar'
-import Router from 'next/router'
-import { useEffect } from 'react'
+import { withAdminOrTechnician } from '@/secure/withAdmin'
 
 const maintenance = () => {
-  const router = Router
-
-  useEffect(() => {
-    const user = localStorage.getItem('user')
-    const userType = user?.tipo_usuario
-
-    if (userType !== 'Administrador') {
-      router.push('/')
-    }
-  }, [])
-
   return (
     <div>
       <Ceo page="Administración de Mantenciones" />
@@ -27,4 +15,4 @@ const maintenance = () => {
   )
 }
 
-export default maintenance
+export default withAdminOrTechnician(maintenance)
