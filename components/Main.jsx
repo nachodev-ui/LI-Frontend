@@ -8,6 +8,7 @@ const Main = () => {
   const { filterBooks } = useFilters()
   const filteredBooks = filterBooks(books)
 
+  // Petición GET a la API para obtener los libros.
   const fetchBooks = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/books')
@@ -31,6 +32,7 @@ const Main = () => {
     }
   }
 
+  // Cuando se monta el componente, se hace la petición GET.
   useEffect(() => {
     fetchBooks()
   }, [])
