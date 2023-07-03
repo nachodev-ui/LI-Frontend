@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
+import { Toaster, toast } from 'sonner'
 
 const EditUser = ({ isOpen, onClose, userData, onUpdateUserData }) => {
   const [loading, setLoading] = useState(false)
@@ -26,9 +27,26 @@ const EditUser = ({ isOpen, onClose, userData, onUpdateUserData }) => {
   if (!isOpen) return null
 
   const handleChange = (event) => {
+    const { id, value } = event.target
+
+    // Agregar un espacio después del número "9"
+    let formattedValue = value
+    if (id === 'telefono') {
+      // Remover todos los espacios existentes
+      formattedValue = value.replace(/\s/g, '')
+
+      if (formattedValue.length === 9 && formattedValue.startsWith('9')) {
+        // Agregar el espacio después del número "9"
+        formattedValue = formattedValue.replace(
+          /(\d{1})(\d{4})(\d{4})/,
+          '$1 $2 $3'
+        )
+      }
+    }
+
     setFormValues({
       ...formValues,
-      [event.target.id]: event.target.value,
+      [id]: formattedValue,
     })
   }
 
@@ -36,8 +54,20 @@ const EditUser = ({ isOpen, onClose, userData, onUpdateUserData }) => {
     setSelectedImage(e.target.files[0])
   }
 
+  const validatePhoneNumber = (phoneNumber) => {
+    // Busca el patrón "9", seguido de un espacio, cuatro dígitos, otro espacio y otros cuatro dígitos.
+    const telefonoRegex = /^9 \d{4} \d{4}$/ // Expresión regular para validar el número de teléfono con espacio después del 9
+    return telefonoRegex.test(phoneNumber)
+  }
+
   const handleSubmit = async () => {
     try {
+      // Validar número de teléfono
+      if (!validatePhoneNumber(formValues.telefono)) {
+        toast.error('El número de teléfono no es válido - Ej: 912345678')
+        return // Detener la ejecución y no enviar la solicitud
+      }
+
       const res = await axios.patch(
         `http://localhost:5000/api/users/update/${userData.id}`,
         formValues
@@ -57,7 +87,7 @@ const EditUser = ({ isOpen, onClose, userData, onUpdateUserData }) => {
       )
       const { username, telefono, ciudad, direccion } = res.data.data
       setFormValues({
-        usernae: username || '',
+        username: username || '',
         telefono: telefono || '',
         ciudad: ciudad || '',
         direccion: direccion || '',
@@ -71,7 +101,7 @@ const EditUser = ({ isOpen, onClose, userData, onUpdateUserData }) => {
   return (
     <>
       <div
-        className="py-12 bg-black z-10 absolute top-0 right-0 bottom-0 left-0 overflow-y-auto"
+        className="py-12 bg-gray-900 z-10 absolute top-0 right-0 bottom-0 left-0 overflow-y-auto"
         id="modal"
       >
         <div
@@ -250,7 +280,7 @@ const EditUser = ({ isOpen, onClose, userData, onUpdateUserData }) => {
                 onClick={handleSubmit}
                 disabled={loading}
               >
-                {loading ? 'Actualizando...' : 'Actualizar'}
+                {loading ? 'Guardando...' : 'Guardar'}
               </button>
               <button
                 className="focus:outline-none focus:ring-2 focus:ring-offset-2  focus:ring-gray-400 ml-3 bg-gray-100 transition duration-150 text-gray-600 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm"
@@ -285,6 +315,7 @@ const EditUser = ({ isOpen, onClose, userData, onUpdateUserData }) => {
           </div>
         </div>
       </div>
+      <Toaster position="top-right" reverseOrder={false} />
     </>
   )
 }
